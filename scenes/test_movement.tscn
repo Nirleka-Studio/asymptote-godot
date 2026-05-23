@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://dv7si4xm31dvm"]
+
+[ext_resource type="PackedScene" uid="uid://vuhh772oec5y" path="res://scenes/player.tscn" id="1_bftkb"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_27mbn"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_6wnlg"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_bftkb"]
+
+[node name="TestMovement" type="Node3D" unique_id=569995074]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1877915699]
+transform = Transform3D(9.840568, 0, 0, 0, 0.2677173, 0, 0, 0, 10.18857, 0, -1.292201, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=499615137]
+shape = SubResource("BoxShape3D_27mbn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1059187696]
+mesh = SubResource("BoxMesh_6wnlg")
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="." unique_id=1188630889]
+transform = Transform3D(0.5886048, 0, 0, 0, 10.799348, 0, 0, 0, 0.85952747, 0, -1.292201, -4.58204)
+physics_material_override = SubResource("PhysicsMaterial_bftkb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2" unique_id=579961989]
+shape = SubResource("BoxShape3D_27mbn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D2" unique_id=1003681776]
+mesh = SubResource("BoxMesh_6wnlg")
+
+[node name="CharacterBody3D" parent="." unique_id=1231463351 instance=ExtResource("1_bftkb")]
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=51888932]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6920831, 0)
+light_energy = 15.97
+light_specular = 0.896
+shadow_enabled = true
+distance_fade_enabled = true

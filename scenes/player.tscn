@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://vuhh772oec5y"]
+
+[ext_resource type="Script" uid="uid://b1u60ncp52vgt" path="res://src/client/character/CharacterController.gd" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://cxx7f1y63lnwo" path="res://src/client/character/CameraController.gd" id="2_g2els"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sh265"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_3vyb7"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" unique_id=1231463351]
+script = ExtResource("1_3vyb7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=749973906]
+shape = SubResource("CapsuleShape3D_sh265")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=188012265]
+mesh = SubResource("CapsuleMesh_3vyb7")
+
+[node name="CameraPivot" type="Node3D" parent="." unique_id=416687874]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.69866717, 0)
+script = ExtResource("2_g2els")
+distance = 4.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot" unique_id=152193574]
