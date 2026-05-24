@@ -15,6 +15,12 @@ run/main_scene="uid://cqu4kcufgsl0d"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
+[debug]
+
+gdscript/warnings/untyped_declaration=1
+gdscript/warnings/unsafe_property_access=1
+gdscript/warnings/unsafe_method_access=1
+
 [display]
 
 window/size/viewport_width=1920
