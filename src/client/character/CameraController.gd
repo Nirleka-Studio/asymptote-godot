@@ -17,7 +17,7 @@ signal zoom_changed(is_first_person: bool)
 @export var fov_lerp_speed: float = 0.1
 
 @onready var camera: Camera3D = $Camera3D
-@onready var player: CharacterBody3D = get_parent()
+@onready var player: CharacterController = get_parent()
 
 var zoom_state: float = 1.0  # 0 = First Person, 1 = Third Person
 var current_zoom: float = 1.0
@@ -43,6 +43,12 @@ class OffsetData:
 var camera_offsets: Dictionary = {}
 
 func _ready() -> void:
+	var is_mine = get_multiplayer_authority() == multiplayer.get_unique_id()
+	set_process(is_mine)
+
+	var cam = find_child("Camera3D", true, false)
+	if cam:
+		cam.current = is_mine
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	camera.fov = default_fov
 	target_fov = default_fov

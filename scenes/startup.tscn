@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://cqu4kcufgsl0d"]
+
+[ext_resource type="Script" uid="uid://dj05h3oxextel" path="res://src/client/Startup.gd" id="1_t87yh"]
+[ext_resource type="Script" uid="uid://d02cf4qqdn2vn" path="res://src/client/ui/EscapeMenu.gd" id="2_tpfpu"]
+
+[node name="Startup" type="Node" unique_id=1580243688]
+script = ExtResource("1_t87yh")
+
+[node name="EscapeMenu" type="Node" parent="." unique_id=702721892]
+script = ExtResource("2_tpfpu")
+
+[node name="LevelSpawner" type="MultiplayerSpawner" parent="." unique_id=2014141025]
+_spawnable_scenes = PackedStringArray("uid://cyhae2muwf70a")
+spawn_path = NodePath("..")
+spawn_limit = 1
+
+[node name="UI" type="Control" parent="." unique_id=128879199]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI" unique_id=780333019]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(6.715235, 7.0047736)
+
+[node name="ButtonHost" type="Button" parent="UI/VBoxContainer" unique_id=844509998]
+layout_mode = 2
+text = "Host"
+
+[node name="ButtonConnect" type="Button" parent="UI/VBoxContainer" unique_id=411356378]
+layout_mode = 2
+text = "Connect
+"
+
+[connection signal="pressed" from="UI/VBoxContainer/ButtonHost" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="UI/VBoxContainer/ButtonConnect" to="." method="_on_client_pressed"]

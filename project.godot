@@ -11,9 +11,14 @@ config_version=5
 [application]
 
 config/name="Asymptote"
-run/main_scene="uid://dv7si4xm31dvm"
+run/main_scene="uid://cqu4kcufgsl0d"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 
 [input]
 

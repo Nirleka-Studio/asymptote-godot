@@ -7,8 +7,23 @@
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_3vyb7"]
 
-[node name="CharacterBody3D" type="CharacterBody3D" unique_id=1231463351]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_g2els"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:velocity")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:player")
+properties/2/spawn = true
+properties/2/replication_mode = 0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qhqgy"]
+
+[node name="Player" type="CharacterBody3D" unique_id=1231463351]
 script = ExtResource("1_3vyb7")
+jumping = null
+player = null
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=749973906]
 shape = SubResource("CapsuleShape3D_sh265")
@@ -22,3 +37,10 @@ script = ExtResource("2_g2els")
 distance = 4.0
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot" unique_id=152193574]
+
+[node name="ServerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=368245620]
+replication_config = SubResource("SceneReplicationConfig_g2els")
+
+[node name="PlayerInput" type="MultiplayerSynchronizer" parent="." unique_id=1963860517]
+root_path = NodePath(".")
+replication_config = SubResource("SceneReplicationConfig_qhqgy")

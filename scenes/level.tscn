@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://cyhae2muwf70a"]
+
+[ext_resource type="Script" uid="uid://dpwpxnlca0a6l" path="res://src/server/level/Level.gd" id="1_2q6dc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2q6dc"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_w7c3h"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2q6dc"]
+
+[node name="World" type="Node3D" unique_id=1099873012]
+script = ExtResource("1_2q6dc")
+
+[node name="Players" type="Node3D" parent="." unique_id=378380871]
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=969502010]
+_spawnable_scenes = PackedStringArray("uid://vuhh772oec5y")
+spawn_path = NodePath("../Players")
+spawn_limit = 4
+
+[node name="Map" type="Node3D" parent="." unique_id=1268467694]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map" unique_id=1912425699]
+transform = Transform3D(50, 0, 0, 0, 1, 0, 0, 0, 50, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_2q6dc")
+mesh = SubResource("BoxMesh_w7c3h")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Map/MeshInstance3D" unique_id=2100479162]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MeshInstance3D/StaticBody3D" unique_id=139099991]
+shape = SubResource("BoxShape3D_2q6dc")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Map" unique_id=2065141232]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.170975, 0)
+light_energy = 1.942
+light_size = 0.098
+shadow_enabled = true
+omni_range = 55.8

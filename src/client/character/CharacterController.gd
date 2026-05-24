@@ -7,9 +7,29 @@ var coyote_timer := 0.0
 const COYOTE_TIME_LIMIT := 0.15 # Seconds
 const JUMP_VELOCITY_MIN := 0.6  # For short hops
 
+@export var jumping := false
+@export var player := 1:
+	set(id):
+		player = id
+
 @onready var camera_pivot: CameraController = $CameraPivot
 
+func _enter_tree():
+	var peer_id = name.to_int()
+	set_multiplayer_authority(peer_id)
+
+	for child in get_children():
+		if child is MultiplayerSynchronizer:
+			child.set_multiplayer_authority(peer_id)
+
+func _ready() -> void:
+	var is_mine = get_multiplayer_authority() == multiplayer.get_unique_id()
+	set_process(is_mine)
+
 func _physics_process(delta: float) -> void:
+	if not is_multiplayer_authority():
+		return
+
 	if is_on_floor():
 		coyote_timer = COYOTE_TIME_LIMIT
 	else:
@@ -20,6 +40,7 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("jump") and coyote_timer > 0:
 		velocity.y = JUMP_VELOCITY
+		jump.rpc()
 		coyote_timer = 0 # Prevent double jumping
 
 	# variable Jump Height: if player releases jump button while still going up
@@ -27,7 +48,6 @@ func _physics_process(delta: float) -> void:
 		velocity.y = JUMP_VELOCITY_MIN
 
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
-	
 	# calculate direction relative to Camera Rotation instead of Character self-transform
 	var camera_basis: Basis = camera_pivot.global_transform.basis
 	var forward := Vector3(camera_basis.z.x, 0, camera_basis.z.z).normalized()
@@ -54,3 +74,7 @@ func _physics_process(delta: float) -> void:
 		rotation.y = camera_y_rot
 
 	move_and_slide()
+	
+@rpc("call_local")
+func jump():
+	jumping = true
