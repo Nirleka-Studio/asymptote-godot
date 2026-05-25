@@ -14,8 +14,8 @@ const JUMP_VELOCITY_MIN := 0.6  # For short hops
 
 @onready var camera_pivot: CameraController = $CameraPivot
 
-func _enter_tree():
-	var peer_id = name.to_int()
+func _enter_tree() -> void:
+	var peer_id: int = name.to_int()
 	set_multiplayer_authority(peer_id)
 
 	for child in get_children():
@@ -23,7 +23,7 @@ func _enter_tree():
 			child.set_multiplayer_authority(peer_id)
 
 func _ready() -> void:
-	var is_mine = get_multiplayer_authority() == multiplayer.get_unique_id()
+	var is_mine: bool = get_multiplayer_authority() == multiplayer.get_unique_id()
 	set_process(is_mine)
 
 func _physics_process(delta: float) -> void:
@@ -62,7 +62,7 @@ func _physics_process(delta: float) -> void:
 		
 		# Only turn character body if NOT aiming or in 1st person
 		if not camera_pivot.is_first_person() and not Input.is_action_pressed("zoom_aim"):
-			var target_angle = atan2(-direction.x, -direction.z)
+			var target_angle: float = atan2(-direction.x, -direction.z)
 			rotation.y = rotation.y + angle_difference(rotation.y, target_angle) * 0.15
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
@@ -70,11 +70,11 @@ func _physics_process(delta: float) -> void:
 
 	# Force face along camera if in First Person or Aiming (Roblox CharacterController behavior)
 	if camera_pivot.is_first_person() or Input.is_action_pressed("zoom_aim"):
-		var camera_y_rot = camera_pivot.rot_y
+		var camera_y_rot: float = camera_pivot.rot_y
 		rotation.y = camera_y_rot
 
 	move_and_slide()
 	
 @rpc("call_local")
-func jump():
+func jump() -> void:
 	jumping = true

@@ -14,7 +14,7 @@ func _ready() -> void:
 	if not OS.has_feature("dedicated_server"):
 		add_player(1)
 
-func add_player(id: int):
+func add_player(id: int) -> void:
 	print("adding player:" + str(id))
 	
 	var character = preload("res://scenes/player.tscn").instantiate()
@@ -23,7 +23,7 @@ func add_player(id: int):
 	
 	$Players.add_child(character, true)
 	
-func remove_player(id: int):
+func remove_player(id: int) -> void:
 	print("removing player:" + str(id))
 	if not $Players.has_node(str(id)):
 		return
