@@ -17,7 +17,7 @@ func _ready() -> void:
 func add_player(id: int) -> void:
 	print("adding player:" + str(id))
 	
-	var character = preload("res://scenes/player.tscn").instantiate()
+	var character: Player = preload("res://scenes/player.tscn").instantiate()
 	character.player = id
 	character.name = str(id)
 	

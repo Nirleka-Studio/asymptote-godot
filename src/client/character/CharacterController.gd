@@ -1,4 +1,4 @@
-extends CharacterBody3D
+extends Player
 class_name CharacterController
 
 const SPEED = 5.0
@@ -8,9 +8,6 @@ const COYOTE_TIME_LIMIT := 0.15 # Seconds
 const JUMP_VELOCITY_MIN := 0.6  # For short hops
 
 @export var jumping := false
-@export var player := 1:
-	set(id):
-		player = id
 
 @onready var camera_pivot: CameraController = $CameraPivot
 
