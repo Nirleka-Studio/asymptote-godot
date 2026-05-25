@@ -36,17 +36,17 @@ var target_fov: float = default_fov
 class OffsetData:
 	var priority: int
 	var value: Transform3D
-	func _init(p: int, v: Transform3D):
+	func _init(p: int, v: Transform3D) -> void:
 		priority = p
 		value = v
 
 var camera_offsets: Dictionary = {}
 
 func _ready() -> void:
-	var is_mine = get_multiplayer_authority() == multiplayer.get_unique_id()
+	var is_mine: bool = get_multiplayer_authority() == multiplayer.get_unique_id()
 	set_process(is_mine)
 
-	var cam = find_child("Camera3D", true, false)
+	var cam: Camera3D = find_child("Camera3D", true, false)
 	if cam:
 		cam.current = is_mine
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -121,16 +121,17 @@ func _process(delta: float) -> void:
 
 		var cast_result := space_state.cast_motion(query)
 		if cast_result.size() > 0:
-			var safe_fraction = max(0.0, cast_result[0] - 0.02)
+			var safe_fraction: int = max(0.0, cast_result[0] - 0.02)
 			third_person_pos = camera_origin + (target_offset * safe_fraction)
 
 	var actual_pos := pivot_pos.lerp(third_person_pos, current_zoom)
 
 	var final_offset := Transform3D.IDENTITY
 	if not camera_offsets.is_empty():
-		var keys = camera_offsets.keys()
-		keys.sort_custom(func(a, b): return camera_offsets[a].priority < camera_offsets[b].priority)
-		for key in keys:
+		var keys: Array = camera_offsets.keys()
+		keys.sort_custom(func(a: Camera3D, b: Camera3D) -> bool:
+			return camera_offsets[a].priority < camera_offsets[b].priority)
+		for key: int in keys:
 			final_offset = final_offset * camera_offsets[key].value
 		camera_offsets.clear()
 
