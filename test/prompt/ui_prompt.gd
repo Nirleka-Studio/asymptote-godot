@@ -240,7 +240,9 @@ func _update_billboard_mode() -> void:
 	if sprite_3d == null:
 		return
 		
-	if omni_dir:
-		sprite_3d.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	else:
-		sprite_3d.billboard = BaseMaterial3D.BILLBOARD_DISABLED
+	var mat: StandardMaterial3D = sprite_3d.material_override as StandardMaterial3D
+	if mat:
+		if omni_dir:
+			mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+		else:
+			mat.billboard_mode = BaseMaterial3D.BILLBOARD_DISABLED

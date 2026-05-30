@@ -56,5 +56,4 @@ key_text = "F"
 action_text = "Pay Respect"
 object_text = "Roblox Asymptote"
 prompt_font = ExtResource("3_w8frs")
-omni_dir = false
 background_color = Color(0, 0, 0, 0.8)
