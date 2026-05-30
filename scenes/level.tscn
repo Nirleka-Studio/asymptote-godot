@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://cyhae2muwf70a"]
 
 [ext_resource type="Script" uid="uid://dpwpxnlca0a6l" path="res://src/server/level/Level.gd" id="1_2q6dc"]
+[ext_resource type="Script" uid="uid://cok4r5m1vpuny" path="res://test/prompt/ui_prompt.gd" id="2_w7c3h"]
+[ext_resource type="FontFile" uid="uid://6b3oapugoud7" path="res://assets/fonts/Zekton-Regular.otf" id="3_w8frs"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2q6dc"]
 
@@ -30,9 +32,29 @@ mesh = SubResource("BoxMesh_w7c3h")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MeshInstance3D/StaticBody3D" unique_id=139099991]
 shape = SubResource("BoxShape3D_2q6dc")
 
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Map" unique_id=1989919765]
+transform = Transform3D(7.7281346, 0, 0, 0, 18.600191, 0, 0, 0, 7.998319, -15.306732, 7.237916, 18.724905)
+material_override = SubResource("StandardMaterial3D_2q6dc")
+mesh = SubResource("BoxMesh_w7c3h")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Map/MeshInstance3D2" unique_id=1970613165]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MeshInstance3D2/StaticBody3D" unique_id=158175030]
+shape = SubResource("BoxShape3D_2q6dc")
+
 [node name="OmniLight3D" type="OmniLight3D" parent="Map" unique_id=2065141232]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.170975, 0)
 light_energy = 1.942
 light_size = 0.098
 shadow_enabled = true
 omni_range = 55.8
+
+[node name="Node3D" type="Node3D" parent="." unique_id=274338477]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6690292, 0)
+script = ExtResource("2_w7c3h")
+key_text = "F"
+action_text = "Pay Respect"
+object_text = "Roblox Asymptote"
+prompt_font = ExtResource("3_w8frs")
+omni_dir = false
+background_color = Color(0, 0, 0, 0.8)
