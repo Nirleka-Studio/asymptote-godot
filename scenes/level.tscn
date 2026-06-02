@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cyhae2muwf70a"]
 
 [ext_resource type="Script" uid="uid://dpwpxnlca0a6l" path="res://src/server/level/Level.gd" id="1_2q6dc"]
+[ext_resource type="PackedScene" uid="uid://0wcdagnrtivh" path="res://scenes/npc.tscn" id="2_mx8sn"]
 [ext_resource type="Script" uid="uid://cok4r5m1vpuny" path="res://test/prompt/ui_prompt.gd" id="2_w7c3h"]
 [ext_resource type="FontFile" uid="uid://6b3oapugoud7" path="res://assets/fonts/Zekton-Regular.otf" id="3_w8frs"]
 
@@ -48,6 +49,11 @@ light_energy = 1.942
 light_size = 0.098
 shadow_enabled = true
 omni_range = 55.8
+
+[node name="Entities" type="Node3D" parent="Map" unique_id=1753681152]
+
+[node name="Npc" parent="Map/Entities" unique_id=2027353190 instance=ExtResource("2_mx8sn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.9728875, 0.920733)
 
 [node name="Node3D" type="Node3D" parent="." unique_id=274338477]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6690292, 0)

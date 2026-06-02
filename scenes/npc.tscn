@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://0wcdagnrtivh"]
+
+[ext_resource type="Script" uid="uid://cswcw0yisfsyv" path="res://src/shared/world/entity/npc/Npc.cs" id="1_nh2m4"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tcuxl"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_nh2m4"]
+
+[node name="Npc" type="CharacterBody3D" unique_id=2027353190]
+script = ExtResource("1_nh2m4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=449574955]
+shape = SubResource("CapsuleShape3D_tcuxl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=696304665]
+mesh = SubResource("CapsuleMesh_nh2m4")
