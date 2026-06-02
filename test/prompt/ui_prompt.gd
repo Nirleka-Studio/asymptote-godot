@@ -1,4 +1,3 @@
-@tool
 extends Node3D
 class_name UIPromptRenderer
 
@@ -27,8 +26,19 @@ class_name UIPromptRenderer
 		omni_dir = value
 		if is_inside_tree(): _update_billboard_mode()
 
+@export var promptVisibilityState: PromptVisibilityState = PromptVisibilityState.PROMPT_ENABLED
+
+enum PromptVisibilityState { PROMPT_ENABLED, PROMPT_DISABLED, PROMPT_KEY_DISABLED }
+
 @export var background_color: Color = Color(0.07, 0.07, 0.07, 0.8)
-@export var corner_radius: int = 8
+const cornerRadius: int = 4
+
+const outerXMargin: float = 4.0
+const outerYMargin: float = 4.0
+
+const actionTextSize: int = 18
+const objectTextSize: int = 10
+const textVerticalSpacing: float = -2 # Higher = farther
 
 var sub_viewport: SubViewport
 var sprite_3d: Sprite3D
@@ -72,32 +82,33 @@ func _build_scene_tree() -> void:
 
 	# Main outer panel (Rounded Background)
 	main_panel = PanelContainer.new()
-	main_panel.custom_minimum_size = Vector2(100, 40)
+	main_panel.custom_minimum_size = Vector2.ZERO
 	main_panel.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	main_panel.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	
 	var main_style: StyleBoxFlat = StyleBoxFlat.new()
 	main_style.bg_color = background_color
-	main_style.set_corner_radius_all(corner_radius)
+	main_style.set_corner_radius_all(cornerRadius)
 	main_panel.add_theme_stylebox_override("panel", main_style)
 	sub_viewport.add_child(main_panel)
 
 	var outer_margin: MarginContainer = MarginContainer.new()
-	outer_margin.add_theme_constant_override("margin_left", 12)
-	outer_margin.add_theme_constant_override("margin_right", 12)
-	outer_margin.add_theme_constant_override("margin_top", 8)
-	outer_margin.add_theme_constant_override("margin_bottom", 8)
+	outer_margin.add_theme_constant_override("margin_left", int(outerXMargin))
+	outer_margin.add_theme_constant_override("margin_right", int(outerXMargin))
+	outer_margin.add_theme_constant_override("margin_top", int(outerYMargin))
+	outer_margin.add_theme_constant_override("margin_bottom", int(outerYMargin))
 	main_panel.add_child(outer_margin)
 
 	# Row organizer
 	var hbox: HBoxContainer = HBoxContainer.new()
-	hbox.add_theme_constant_override("separation", 12)
+	# Reduced separation for tighter gap between key and text
+	hbox.add_theme_constant_override("separation", 6)
 	outer_margin.add_child(hbox)
 
 	# Key box background
 	var key_panel: PanelContainer = PanelContainer.new()
 	key_panel.custom_minimum_size = Vector2(36, 36)
-	key_panel.size_flags_vertical = Control.SIZE_SHRINK_CENTER # Stops the vertical stretching
+	key_panel.size_flags_vertical = Control.SIZE_SHRINK_BEGIN # Stops the vertical stretching
 	var key_style: StyleBoxFlat = StyleBoxFlat.new()
 	key_style.bg_color = Color.WHITE
 	key_style.set_corner_radius_all(4)
@@ -117,22 +128,23 @@ func _build_scene_tree() -> void:
 	key_label.add_theme_color_override("font_color", Color.BLACK)
 	key_margin.add_child(key_label)
 
-	# Vertical text stack
-	var vbox: VBoxContainer = VBoxContainer.new()
-	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	vbox.add_theme_constant_override("alignment", BoxContainer.ALIGNMENT_CENTER)
-	hbox.add_child(vbox)
+	# Raw canvas control isolates text nodes from container constraints
+	var text_canvas: Control = Control.new()
+	text_canvas.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	hbox.add_child(text_canvas)
 
 	# Action label (e.g. "Open")
 	action_label = Label.new()
-	action_label.add_theme_font_size_override("font_size", 18)
-	vbox.add_child(action_label)
+	action_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	action_label.add_theme_font_size_override("font_size", actionTextSize)
+	text_canvas.add_child(action_label)
 
 	# Object label (e.g. "Cabinet")
 	object_label = Label.new()
-	object_label.add_theme_font_size_override("font_size", 13)
+	object_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	object_label.add_theme_font_size_override("font_size", objectTextSize)
 	object_label.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
-	vbox.add_child(object_label)
+	text_canvas.add_child(object_label)
 
 	main_panel.minimum_size_changed.connect(_on_ui_layout_changed)
 	_apply_font()
@@ -182,21 +194,25 @@ func _on_ui_layout_changed() -> void:
 	# Internal asset scaling factor (e.g., 4.0 for 4x crispness)
 	var hd_scale: float = 4.0
 
-	action_label.add_theme_font_size_override("font_size", int(18 * hd_scale))
-	object_label.add_theme_font_size_override("font_size", int(13 * hd_scale))
-	key_label.add_theme_font_size_override("font_size", int(16 * hd_scale))
+	action_label.add_theme_font_size_override("font_size", int(actionTextSize * hd_scale))
+	object_label.add_theme_font_size_override("font_size", int(objectTextSize * hd_scale))
+	key_label.add_theme_font_size_override("font_size", int(20 * hd_scale))
+
+	# Strip hidden line height buffers
+	action_label.add_theme_constant_override("line_spacing", 0)
+	object_label.add_theme_constant_override("line_spacing", 0)
 	
 	# Update outer padding
 	var outer_margin: MarginContainer = main_panel.get_child(0) as MarginContainer
 	if outer_margin:
-		outer_margin.add_theme_constant_override("margin_left", int(12 * hd_scale))
-		outer_margin.add_theme_constant_override("margin_right", int(12 * hd_scale))
-		outer_margin.add_theme_constant_override("margin_top", int(8 * hd_scale))
-		outer_margin.add_theme_constant_override("margin_bottom", int(8 * hd_scale))
+		outer_margin.add_theme_constant_override("margin_left", int(outerXMargin * hd_scale))
+		outer_margin.add_theme_constant_override("margin_right", int(outerXMargin * hd_scale))
+		outer_margin.add_theme_constant_override("margin_top", int(outerYMargin * hd_scale))
+		outer_margin.add_theme_constant_override("margin_bottom", int(outerYMargin * hd_scale))
 		
 		var hbox: HBoxContainer = outer_margin.get_child(0) as HBoxContainer
 		if hbox:
-			hbox.add_theme_constant_override("separation", int(12 * hd_scale))
+			hbox.add_theme_constant_override("separation", int(6 * hd_scale)) # Tighter horizontal spacing
 			
 			# Update key panel container sizing
 			var key_panel: PanelContainer = hbox.get_child(0) as PanelContainer
@@ -214,10 +230,45 @@ func _on_ui_layout_changed() -> void:
 					key_margin.add_theme_constant_override("margin_left", int(6 * hd_scale))
 					key_margin.add_theme_constant_override("margin_right", int(6 * hd_scale))
 
+			# Position control canvas relative to the parent bounding frame
+			var text_canvas: Control = hbox.get_child(1) as Control
+			if text_canvas:
+				var key_size: float = 36.0 * hd_scale
+				var action_h: float = action_label.get_combined_minimum_size().y
+				
+				# 1. Check if we are centering just one line
+				if not object_label.visible or object_label.text == "":
+					var center_y: float = (key_size - action_h) / 2.0
+					# Add +1.0 scale to counter invisible bottom font padding
+					action_label.position = Vector2(0, center_y + (1.0 * hd_scale))
+					text_canvas.custom_minimum_size = Vector2(action_label.get_combined_minimum_size().x, key_size)
+				
+				# 2. Group both strings into a block and center them dynamically
+				else:
+					var obj_h: float = object_label.get_combined_minimum_size().y
+					
+					# Gap calculation based on the new constant
+					var line_overlap: float = textVerticalSpacing * hd_scale 
+					
+					# Calculate total unified height of both lines
+					var block_h: float = action_h + obj_h + line_overlap
+					
+					# Find perfect center of the key block relative to unified text block
+					var start_y: float = (key_size - block_h) / 2.0
+					
+					# Slight visual bump to counter descender padding
+					var global_visual_offset: float = -1.0 * hd_scale 
+					
+					action_label.position = Vector2(0, start_y + global_visual_offset)
+					object_label.position = Vector2(0, start_y + action_h + line_overlap + global_visual_offset)
+					
+					var max_w: float = max(action_label.get_combined_minimum_size().x, object_label.get_combined_minimum_size().x)
+					text_canvas.custom_minimum_size = Vector2(max_w, key_size)
+
 	# Update background stylebox rounded corners
 	var main_style: StyleBoxFlat = main_panel.get_theme_stylebox("panel") as StyleBoxFlat
 	if main_style:
-		main_style.set_corner_radius_all(int(corner_radius * hd_scale))
+		main_style.set_corner_radius_all(int(cornerRadius * hd_scale))
 
 	# Reevaluate layout boundaries with scaled dimensions
 	main_panel.queue_sort()
