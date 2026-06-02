@@ -56,5 +56,5 @@ key_text = "F"
 action_text = "Disguise"
 object_text = "Security"
 prompt_font = ExtResource("3_w8frs")
-omni_dir = null
+omni_dir = false
 background_color = null
