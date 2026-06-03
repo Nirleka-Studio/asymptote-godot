@@ -46,7 +46,7 @@ public partial class Npc : CharacterBody3D, IEntity
 		if (!Position.IsEqualApprox(this.position))
 		{
 			this.position = Position;
-			this.onPositionChanged.Invoke(this);
+			this.onPositionChanged?.Invoke(this);
 		}
 	}
 
