@@ -22,3 +22,8 @@ mono_crash.*.json
 # Mac stuff
 
 .DS_Store
+
+# JetBrains stuff
+.idea/
+*.uid
+*.iml

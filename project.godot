@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Asymptote"
 run/main_scene="uid://cqu4kcufgsl0d"
-config/features=PackedStringArray("4.6", "Forward Plus")
+config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [debug]
