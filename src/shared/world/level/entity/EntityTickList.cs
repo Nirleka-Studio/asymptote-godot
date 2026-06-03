@@ -18,10 +18,9 @@ public class EntityTickList
 			{
 				this.passive.Add(kvp.Key, kvp.Value);
 			}
-
-			var temp = this.active;
-			this.active = this.passive;
-			this.passive = temp;
+			
+			// Using tuple for swapping cuz it won't shut the fuck up
+			(this.active, this.passive) = (this.passive, this.active);
 		}
 	}
 
