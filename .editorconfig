@@ -2,3 +2,12 @@ root = true
 
 [*]
 charset = utf-8
+
+# C# files
+[*.cs]
+indent_style = space
+indent_size = 4
+
+# GDScript files
+[*.gd]
+indent_style = tab
