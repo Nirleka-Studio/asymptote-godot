@@ -6,67 +6,155 @@ namespace Asymptote.Shared.World.Entity;
 
 public partial class Npc : CharacterBody3D, IEntity
 {
-	public string uuid { get; set; }
-	public int instId { get; set; }
-	private Scene scene { get; set; }
-	public event Action<IEntity> onPositionChanged;
-	public event Action<IEntity> onRemovedFromWorld;
+    public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+    private Scene scene { get; set; }
 
-	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+    public Vector3 position { get; set; }
+    public string uuid { get; set; }
+    public int instId { get; set; }
+    public event Action<IEntity> onPositionChanged;
+    public event Action<IEntity> onRemovedFromWorld;
 
-	public Godot.Vector3 position { get; set; }
+    #region Navigation
 
-	public string getUuid()
-	{
-		return this.uuid;
-	}
+    private NavigationAgent3D navAgent;
+    private RandomNumberGenerator randomNumberGenerator = new();
+    private bool hasValidTarget;
 
-	public override void _Ready()
-	{
-		GD.Print("NPC is ready!");
-	}
+    [Export] public float MovementSpeed { get; set; } = 4.0f;
+    [Export] public float WanderRadius { get; set; } = 15.0f;
+    [Export] public float TargetThreshold { get; set; } = 1.0f;
 
-	public override void _PhysicsProcess(double delta)
-	{
-		Vector3 velocity = Velocity;
+    #endregion
 
-		if (!IsOnFloor())
-		{
-			velocity.Y -= gravity * (float)delta;
-		}
-		else
-		{
-			velocity.Y = 0;
-		}
+    public string getUuid()
+    {
+        return uuid;
+    }
 
-		Velocity = velocity;
+    public Vector3 getPosition()
+    {
+        return GlobalPosition;
+    }
 
-		MoveAndSlide();
+    public void setScene(Scene scene)
+    {
+        this.scene = scene;
+    }
 
-		if (!Position.IsEqualApprox(this.position))
-		{
-			this.position = Position;
-			this.onPositionChanged?.Invoke(this);
-		}
-	}
+    public bool isInScene()
+    {
+        return scene != null;
+    }
 
-	public Vector3 getPosition()
-	{
-		return GlobalPosition;
-	}
+    public override void _Ready()
+    {
+        GD.Print("NPC is ready!");
 
-	public Scene getScene()
-	{
-		return this.scene;
-	}
+        navAgent = new NavigationAgent3D();
+        AddChild(navAgent);
 
-	public void setScene(Scene scene)
-	{
-		this.scene = scene;
-	}
+        // How close the agent should be before stopping
+        navAgent.TargetDesiredDistance = TargetThreshold;
+        navAgent.TargetReached += onTargetReached;
+    }
 
-	public bool isInScene()
-	{
-		return this.scene != null;
-	}
+    public override void _PhysicsProcess(double delta)
+    {
+        var mapRid = navAgent.GetNavigationMap();
+
+        // Wait for the map to be valid before causing a major fuckup
+        if (!mapRid.IsValid || NavigationServer3D.MapGetIterationId(mapRid) == 0) return;
+
+        if (!hasValidTarget)
+        {
+            targetRandomPosition();
+            return;
+        }
+
+        var velocity = Velocity;
+
+        // Isaac Newton would be mindblown
+        if (!IsOnFloor())
+            velocity.Y -= gravity * (float)delta;
+        else
+            velocity.Y = 0;
+
+        // Only try to move if the agent has a path and also didn't reach it yet
+        if (!navAgent.IsTargetReached())
+        {
+            var currentPosition = GlobalPosition;
+            var nextPathPosition = navAgent.GetNextPathPosition();
+
+            var direction = nextPathPosition - currentPosition;
+            direction.Y = 0; // Keep movement on a flat plane
+
+            // Prevent zero-vector normalization bullshit
+            if (direction.LengthSquared() > 0.001f)
+            {
+                direction = direction.Normalized();
+
+                velocity.X = direction.X * MovementSpeed;
+                velocity.Z = direction.Z * MovementSpeed;
+
+                LookAt(currentPosition + direction, Vector3.Up);
+            }
+        }
+        else
+        {
+            velocity.X = 0;
+            velocity.Z = 0;
+        }
+
+        Velocity = velocity;
+        MoveAndSlide();
+
+        if (!Position.IsEqualApprox(position))
+        {
+            position = Position;
+            onPositionChanged?.Invoke(this);
+        }
+    }
+
+    private void targetRandomPosition()
+    {
+        var mapRid = navAgent.GetNavigationMap();
+
+        var randomX = randomNumberGenerator.RandfRange(-WanderRadius, WanderRadius);
+        var randomZ = randomNumberGenerator.RandfRange(-WanderRadius, WanderRadius);
+        var randomTarget = GlobalPosition + new Vector3(randomX, 0, randomZ);
+
+        // Holy shit we have more control over our navmesh
+        // Fuck you Roblox PathfindingService
+        var closestValidPoint = NavigationServer3D.MapGetClosestPoint(mapRid, randomTarget);
+
+        // If the map returns (0,0,0) and our NPC isn't actually AT (0,0,0) then retry next frame
+        if (closestValidPoint.IsEqualApprox(Vector3.Zero) && !GlobalPosition.IsEqualApprox(Vector3.Zero))
+        {
+            hasValidTarget = false;
+            return;
+        }
+
+        // Prevents immediate re-triggering if we're still too close somehow
+        if (GlobalPosition.DistanceTo(closestValidPoint) < TargetThreshold * 2.0f)
+        {
+            hasValidTarget = false;
+            return;
+        }
+
+        navAgent.TargetPosition = closestValidPoint;
+        hasValidTarget = true;
+        GD.Print($"Heading to: {closestValidPoint}");
+    }
+
+    private void onTargetReached()
+    {
+        GD.Print("Target reached! Finding next destination...");
+        hasValidTarget = false;
+    }
+
+    public Scene getScene()
+    {
+        return scene;
+    }
 }
