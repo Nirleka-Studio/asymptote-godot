@@ -24,4 +24,9 @@ public class Scene
     {
         return this.entityManager.getEntityByUuid(uuid);
     }
+
+    internal void update(double deltaTime, double currentTime)
+    {
+        this.entityTickList.forEach((entity => entity.update(deltaTime, currentTime)));
+    }
 }

@@ -59,6 +59,11 @@ public partial class Npc : CharacterBody3D, IEntity
         navAgent.TargetReached += onTargetReached;
     }
 
+    public void update(double deltaTime, double currentTime)
+    {
+        return; // TODO: Should replace _PhysicsProcess
+    }
+
     public override void _PhysicsProcess(double delta)
     {
         var mapRid = navAgent.GetNavigationMap();

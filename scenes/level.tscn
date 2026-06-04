@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cyhae2muwf70a"]
 
-[ext_resource type="Script" uid="uid://dpwpxnlca0a6l" path="res://src/server/level/Level.gd" id="1_2q6dc"]
+[ext_resource type="Script" uid="uid://gb8q1upwqqwc" path="res://src/server/Server.cs" id="1_mx8sn"]
 [ext_resource type="PackedScene" uid="uid://0wcdagnrtivh" path="res://scenes/npc.tscn" id="2_mx8sn"]
 [ext_resource type="Script" uid="uid://cok4r5m1vpuny" path="res://test/prompt/ui_prompt.gd" id="2_w7c3h"]
 [ext_resource type="FontFile" uid="uid://6b3oapugoud7" path="res://assets/fonts/Zekton-Regular.otf" id="3_w8frs"]
@@ -16,7 +16,7 @@ polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(4, 3, 2), PackedInt32Arr
 [sub_resource type="BoxShape3D" id="BoxShape3D_2q6dc"]
 
 [node name="World" type="Node3D" unique_id=1099873012]
-script = ExtResource("1_2q6dc")
+script = ExtResource("1_mx8sn")
 
 [node name="Players" type="Node3D" parent="." unique_id=378380871]
 
