@@ -29,11 +29,12 @@ public partial class Server : Node
             double currentTime = this.currentTick * TICK_RATE;
             this.scene.update(TICK_RATE, currentTime);
             ticks++;
+            this.currentTick++;
         }
 
         if (this.timeAccumulator > TICK_RATE * MAX_TICKS_PER_SECOND)
         {
-            this.timeAccumulator -= 0d;
+            this.timeAccumulator -= 0;
         }
     }
 
