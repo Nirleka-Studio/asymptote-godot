@@ -7,143 +7,143 @@ namespace Asymptote.Shared.World.Level.Entity;
 
 public class EntitySectionManager
 {
-	private const float SECTION_SIZE = 16.0f;
-	private readonly Dictionary<Vector3I, HashSet<IEntity>> sections = new();
-	private readonly Dictionary<IEntity, Vector3I> entityToSection = new();
-	private readonly Dictionary<string, IEntity> uuidToEntity = new();
+    private const float SECTION_SIZE = 16.0f;
+    private readonly Dictionary<Vector3I, HashSet<IEntity>> sections = new();
+    private readonly Dictionary<IEntity, Vector3I> entityToSection = new();
+    private readonly Dictionary<string, IEntity> uuidToEntity = new();
 
-	private readonly LevelCallbackProxy levelCallback;
+    private readonly LevelCallbackProxy levelCallback;
 
-	public EntitySectionManager(LevelCallbackProxy levelCallback)
-	{
-		this.levelCallback = levelCallback;
-	}
+    public EntitySectionManager(LevelCallbackProxy levelCallback)
+    {
+        this.levelCallback = levelCallback;
+    }
 
-	private Vector3I getSectionKey(Vector3 position)
-	{
-		return new Vector3I(
-			Mathf.FloorToInt(position.X / SECTION_SIZE),
-			Mathf.FloorToInt(position.Y / SECTION_SIZE),
-			Mathf.FloorToInt(position.Z / SECTION_SIZE)
-		);
-	}
+    private Vector3I getSectionKey(Vector3 position)
+    {
+        return new Vector3I(
+            Mathf.FloorToInt(position.X / SECTION_SIZE),
+            Mathf.FloorToInt(position.Y / SECTION_SIZE),
+            Mathf.FloorToInt(position.Z / SECTION_SIZE)
+        );
+    }
 
-	public void addEntity(IEntity entity)
-	{
-		if (string.IsNullOrEmpty(entity.getUuid()) || entity.getUuid() == "UNSET")
-		{
-			entity.setUuid(Guid.NewGuid().ToString());
-		}
+    public void addEntity(IEntity entity)
+    {
+        if (string.IsNullOrEmpty(entity.getUuid()) || entity.getUuid() == "UNSET")
+        {
+            entity.setUuid(Guid.NewGuid().ToString());
+        }
 
-		Vector3 pos = entity.getPosition();
-		Vector3I key = getSectionKey(pos);
+        Vector3 pos = entity.getPosition();
+        Vector3I key = getSectionKey(pos);
 
-		if (!sections.ContainsKey(key))
-		{
-			sections[key] = new HashSet<IEntity>();
-		}
+        if (!sections.ContainsKey(key))
+        {
+            sections[key] = new HashSet<IEntity>();
+        }
 
-		sections[key].Add(entity);
-		entityToSection[entity] = key;
-		uuidToEntity[entity.getUuid()] = entity;
+        sections[key].Add(entity);
+        entityToSection[entity] = key;
+        uuidToEntity[entity.getUuid()] = entity;
 
-		entity.onPositionChanged += updateEntityPosition;
-		entity.onRemovedFromWorld += removeEntity;
+        entity.onPositionChanged += updateEntityPosition;
+        entity.onRemovedFromWorld += removeEntity;
 
-		levelCallback.onTickingStart(entity);
-	}
+        levelCallback.onTickingStart(entity);
+    }
 
-	public void removeEntity(IEntity entity)
-	{
-		if (entityToSection.TryGetValue(entity, out Vector3I key))
-		{
-			if (sections.TryGetValue(key, out var section))
-			{
-				section.Remove(entity);
-				if (section.Count == 0)
-				{
-					sections.Remove(key);
-				}
-			}
+    public void removeEntity(IEntity entity)
+    {
+        if (entityToSection.TryGetValue(entity, out Vector3I key))
+        {
+            if (sections.TryGetValue(key, out var section))
+            {
+                section.Remove(entity);
+                if (section.Count == 0)
+                {
+                    sections.Remove(key);
+                }
+            }
 
-			entityToSection.Remove(entity);
-			uuidToEntity.Remove(entity.getUuid());
+            entityToSection.Remove(entity);
+            uuidToEntity.Remove(entity.getUuid());
 
-			entity.onPositionChanged -= updateEntityPosition;
-			entity.onRemovedFromWorld -= removeEntity;
+            entity.onPositionChanged -= updateEntityPosition;
+            entity.onRemovedFromWorld -= removeEntity;
 
-			levelCallback.onTickingStop(entity);
-		}
-	}
+            levelCallback.onTickingStop(entity);
+        }
+    }
 
-	public void updateEntityPosition(IEntity entity)
-	{
-		if (!entityToSection.TryGetValue(entity, out Vector3I oldKey)) return;
+    public void updateEntityPosition(IEntity entity)
+    {
+        if (!entityToSection.TryGetValue(entity, out Vector3I oldKey)) return;
 
-		Vector3 pos = entity.getPosition();
-		Vector3I newKey = getSectionKey(pos);
+        Vector3 pos = entity.getPosition();
+        Vector3I newKey = getSectionKey(pos);
 
-		if (oldKey != newKey)
-		{
-			// Erase from previous chunk
-			if (sections.TryGetValue(oldKey, out var oldSection))
-			{
-				oldSection.Remove(entity);
-				if (oldSection.Count == 0) sections.Remove(oldKey);
-			}
+        if (oldKey != newKey)
+        {
+            // Erase from previous chunk
+            if (sections.TryGetValue(oldKey, out var oldSection))
+            {
+                oldSection.Remove(entity);
+                if (oldSection.Count == 0) sections.Remove(oldKey);
+            }
 
-			// Append to new chunk
-			if (!sections.ContainsKey(newKey))
-			{
-				sections[newKey] = new HashSet<IEntity>();
-			}
+            // Append to new chunk
+            if (!sections.ContainsKey(newKey))
+            {
+                sections[newKey] = new HashSet<IEntity>();
+            }
 
-			sections[newKey].Add(entity);
-			entityToSection[entity] = newKey;
-		}
-	}
+            sections[newKey].Add(entity);
+            entityToSection[entity] = newKey;
+        }
+    }
 
-	public IEntity getEntityByUuid(string uuid)
-	{
-		return uuidToEntity.GetValueOrDefault(uuid);
-	}
+    public IEntity getEntityByUuid(string uuid)
+    {
+        return uuidToEntity.GetValueOrDefault(uuid);
+    }
 
-	public List<IEntity> getEntitiesInRange(Vector3 origin, float minDist, float maxDist)
-	{
-		var foundEntities = new List<IEntity>();
-		
-		float minSq = minDist * minDist;
-		float maxSq = maxDist * maxDist;
+    public List<IEntity> getEntitiesInRange(Vector3 origin, float minDist, float maxDist)
+    {
+        var foundEntities = new List<IEntity>();
 
-		// Calculate min/max boundaries in world space to capture chunk ranges
-		Vector3I minCell = getSectionKey(origin - new Vector3(maxDist, maxDist, maxDist));
-		Vector3I maxCell = getSectionKey(origin + new Vector3(maxDist, maxDist, maxDist));
+        float minSq = minDist * minDist;
+        float maxSq = maxDist * maxDist;
 
-		// Iterate through intersecting grid coordinate space exclusively
-		for (int x = minCell.X; x <= maxCell.X; x++)
-		{
-			for (int y = minCell.Y; y <= maxCell.Y; y++)
-			{
-				for (int z = minCell.Z; z <= maxCell.Z; z++)
-				{
-					var lookupKey = new Vector3I(x, y, z);
-					
-					if (sections.TryGetValue(lookupKey, out var section))
-					{
-						foreach (var entity in section)
-						{
-							float distSq = origin.DistanceSquaredTo(entity.getPosition());
-							
-							if (distSq >= minSq && distSq <= maxSq)
-							{
-								foundEntities.Add(entity);
-							}
-						}
-					}
-				}
-			}
-		}
+        // Calculate min/max boundaries in world space to capture chunk ranges
+        Vector3I minCell = getSectionKey(origin - new Vector3(maxDist, maxDist, maxDist));
+        Vector3I maxCell = getSectionKey(origin + new Vector3(maxDist, maxDist, maxDist));
 
-		return foundEntities;
-	}
+        // Iterate through intersecting grid coordinate space exclusively
+        for (int x = minCell.X; x <= maxCell.X; x++)
+        {
+            for (int y = minCell.Y; y <= maxCell.Y; y++)
+            {
+                for (int z = minCell.Z; z <= maxCell.Z; z++)
+                {
+                    var lookupKey = new Vector3I(x, y, z);
+
+                    if (sections.TryGetValue(lookupKey, out var section))
+                    {
+                        foreach (var entity in section)
+                        {
+                            float distSq = origin.DistanceSquaredTo(entity.getPosition());
+
+                            if (distSq >= minSq && distSq <= maxSq)
+                            {
+                                foundEntities.Add(entity);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return foundEntities;
+    }
 }
