@@ -5,6 +5,10 @@
 [ext_resource type="Script" uid="uid://cok4r5m1vpuny" path="res://test/prompt/ui_prompt.gd" id="2_w7c3h"]
 [ext_resource type="FontFile" uid="uid://6b3oapugoud7" path="res://assets/fonts/Zekton-Regular.otf" id="3_w8frs"]
 
+[sub_resource type="NavigationMesh" id="NavigationMesh_mx8sn"]
+vertices = PackedVector3Array(-7.3689394, 8.088791, 3.5916998, -4.1189394, 8.088791, 3.5916998, -4.3689394, 8.088791, 1.5916998, -2.1189394, 8.088791, 1.3416998, -2.1189394, 8.088791, -3.1583002, -7.3689394, 8.088791, -3.1583002, -1.6189394, 8.088791, 1.5916998, 7.3810606, 8.088791, 3.5916998, 7.3810606, 8.088791, -3.1583002, -1.8689394, 8.088791, 3.5916998)
+polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(4, 3, 2), PackedInt32Array(0, 5, 2), PackedInt32Array(2, 5, 4), PackedInt32Array(3, 4, 6), PackedInt32Array(6, 4, 8), PackedInt32Array(6, 8, 7), PackedInt32Array(7, 9, 6)]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2q6dc"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_w7c3h"]
@@ -21,40 +25,6 @@ _spawnable_scenes = PackedStringArray("uid://vuhh772oec5y")
 spawn_path = NodePath("../Players")
 spawn_limit = 4
 
-[node name="Map" type="Node3D" parent="." unique_id=1268467694]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Map" unique_id=1912425699]
-transform = Transform3D(50, 0, 0, 0, 1, 0, 0, 0, 50, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_2q6dc")
-mesh = SubResource("BoxMesh_w7c3h")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Map/MeshInstance3D" unique_id=2100479162]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MeshInstance3D/StaticBody3D" unique_id=139099991]
-shape = SubResource("BoxShape3D_2q6dc")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Map" unique_id=1989919765]
-transform = Transform3D(7.7281346, 0, 0, 0, 18.600191, 0, 0, 0, 7.998319, -15.306732, 7.237916, 18.724905)
-material_override = SubResource("StandardMaterial3D_2q6dc")
-mesh = SubResource("BoxMesh_w7c3h")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Map/MeshInstance3D2" unique_id=1970613165]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MeshInstance3D2/StaticBody3D" unique_id=158175030]
-shape = SubResource("BoxShape3D_2q6dc")
-
-[node name="OmniLight3D" type="OmniLight3D" parent="Map" unique_id=2065141232]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.170975, 0)
-light_energy = 1.942
-light_size = 0.098
-shadow_enabled = true
-omni_range = 55.8
-
-[node name="Entities" type="Node3D" parent="Map" unique_id=1753681152]
-
-[node name="Npc" parent="Map/Entities" unique_id=2027353190 instance=ExtResource("2_mx8sn")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.9728875, 0.920733)
-
 [node name="Node3D" type="Node3D" parent="." unique_id=274338477]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6690292, 0)
 script = ExtResource("2_w7c3h")
@@ -64,3 +34,47 @@ object_text = "Security"
 prompt_font = ExtResource("3_w8frs")
 omni_dir = false
 background_color = null
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=2070290154]
+transform = Transform3D(4.955844, 0, 0, 0, 0.07592368, 0, 0, 0, 7.994562, 0, 0, 0)
+navigation_mesh = SubResource("NavigationMesh_mx8sn")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="NavigationRegion3D" unique_id=2094631420]
+transform = Transform3D(15.737878, 0, 0, 0, 15.310056, 0, 0, 0, 1.0619832, 0, 0, 0.25886527)
+use_collision = true
+size = Vector3(1, 1, 7.377075)
+
+[node name="Map" type="Node3D" parent="NavigationRegion3D" unique_id=1268467694]
+transform = Transform3D(0.20178199, 0, 0, 0, 13.171121, 0, 0, 0, 0.12508503, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/Map" unique_id=1912425699]
+transform = Transform3D(50, 0, 0, 0, 1, 0, 0, 0, 50, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_2q6dc")
+mesh = SubResource("BoxMesh_w7c3h")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Map/MeshInstance3D" unique_id=2100479162]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Map/MeshInstance3D/StaticBody3D" unique_id=139099991]
+shape = SubResource("BoxShape3D_2q6dc")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="NavigationRegion3D/Map" unique_id=1989919765]
+transform = Transform3D(7.7281346, 0, 0, 0, 18.600191, 0, 0, 0, 7.998319, -15.306732, 7.237916, 18.724905)
+material_override = SubResource("StandardMaterial3D_2q6dc")
+mesh = SubResource("BoxMesh_w7c3h")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Map/MeshInstance3D2" unique_id=1970613165]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Map/MeshInstance3D2/StaticBody3D" unique_id=158175030]
+shape = SubResource("BoxShape3D_2q6dc")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="NavigationRegion3D/Map" unique_id=2065141232]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.170975, 0)
+light_energy = 1.942
+light_size = 0.098
+shadow_enabled = true
+omni_range = 55.8
+
+[node name="Entities" type="Node3D" parent="NavigationRegion3D/Map" unique_id=1753681152]
+
+[node name="Npc" parent="NavigationRegion3D/Map/Entities" unique_id=2027353190 instance=ExtResource("2_mx8sn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.9728875, 0.920733)
