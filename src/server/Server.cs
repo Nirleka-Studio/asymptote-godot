@@ -17,24 +17,21 @@ public partial class Server : Node
 
     private void updateLevel(double delta)
     {
-        // NOTES: Maybe this will get fucked if we decide to change the tick rate,
-        // pause tick, speed up time, pause time, etc.
         this.timeAccumulator += delta;
 
-        int ticks = 0;
-
-        while (this.timeAccumulator >= TICK_RATE && ticks < MAX_TICKS_PER_SECOND)
+        double maxAllowedTime = TICK_RATE * MAX_TICKS_PER_SECOND;
+        if (this.timeAccumulator > maxAllowedTime)
         {
-            // Oh this would absolutely get fucked if the game keeps running for a long time.
-            double currentTime = this.currentTick * TICK_RATE;
-            this.scene.update(TICK_RATE, currentTime);
-            ticks++;
-            this.currentTick++;
+            this.timeAccumulator = maxAllowedTime + (this.timeAccumulator % TICK_RATE);
         }
 
-        if (this.timeAccumulator > TICK_RATE * MAX_TICKS_PER_SECOND)
+        while (this.timeAccumulator >= TICK_RATE)
         {
-            this.timeAccumulator -= 0;
+            double currentTime = this.currentTick * TICK_RATE;
+            this.scene.update(TICK_RATE, currentTime);
+
+            this.currentTick++;
+            this.timeAccumulator -= TICK_RATE;
         }
     }
 
