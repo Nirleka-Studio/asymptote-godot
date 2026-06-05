@@ -9,9 +9,14 @@ public partial class Server : Node
     private const float TICK_RATE = (float)1 / 20;
     private const int MAX_TICKS_PER_SECOND = 5;
 
-    private Scene scene = new();
+    public Scene scene { get; }
     private double timeAccumulator = 0;
     private ulong currentTick = 0;
+
+    public Server()
+    {
+        this.scene = new Scene();
+    }
 
     #region Level
 

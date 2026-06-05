@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://cyhae2muwf70a"]
 
 [ext_resource type="Script" uid="uid://gb8q1upwqqwc" path="res://src/server/Server.cs" id="1_mx8sn"]
-[ext_resource type="PackedScene" uid="uid://0wcdagnrtivh" path="res://scenes/npc.tscn" id="2_mx8sn"]
 [ext_resource type="Script" uid="uid://cok4r5m1vpuny" path="res://test/prompt/ui_prompt.gd" id="2_w7c3h"]
 [ext_resource type="FontFile" uid="uid://6b3oapugoud7" path="res://assets/fonts/Zekton-Regular.otf" id="3_w8frs"]
+[ext_resource type="Script" uid="uid://cxotx2a6rv136" path="res://src/shared/world/entity/npc/NpcSpawner.cs" id="4_mx8sn"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_mx8sn"]
 vertices = PackedVector3Array(-7.3689394, 8.088791, 3.5916998, -4.1189394, 8.088791, 3.5916998, -4.3689394, 8.088791, 1.5916998, -2.1189394, 8.088791, 1.3416998, -2.1189394, 8.088791, -3.1583002, -7.3689394, 8.088791, -3.1583002, -1.6189394, 8.088791, 1.5916998, 7.3810606, 8.088791, 3.5916998, 7.3810606, 8.088791, -3.1583002, -1.8689394, 8.088791, 3.5916998)
@@ -76,5 +76,6 @@ omni_range = 55.8
 
 [node name="Entities" type="Node3D" parent="NavigationRegion3D/Map" unique_id=1753681152]
 
-[node name="Npc" parent="NavigationRegion3D/Map/Entities" unique_id=2027353190 instance=ExtResource("2_mx8sn")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.9728875, 0.920733)
+[node name="Npc" type="Node3D" parent="NavigationRegion3D/Map/Entities" unique_id=170323388]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.3348665, 0)
+script = ExtResource("4_mx8sn")
