@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Asymptote.Shared.World.Entity.AI;
+using Asymptote.Shared.World.Entity.AI.Detection;
 using Asymptote.Shared.World.Entity.AI.Memory;
 using Asymptote.Shared.World.Entity.AI.Sensing;
+using Asymptote.Shared.World.Entity.Component;
 using Asymptote.Shared.World.Level.Scene;
 using Asymptote.Util;
 using Godot;
@@ -11,6 +13,7 @@ namespace Asymptote.Shared.World.Entity;
 
 public partial class Npc : CharacterBody3D, IEntity
 {
+    private static bool TEMP_PATHFINDING_ENABLED = false;
     public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
     private Scene scene { get; set; }
 
@@ -23,9 +26,11 @@ public partial class Npc : CharacterBody3D, IEntity
     private Node3D eyeNode;
 
     private Brain<Npc> brain;
+    private DetectionManager detectionManager;
 
     public Npc()
     {
+        this.detectionManager = new(this);
         this.brain = new Brain<Npc>(this, new List<IMemoryModuleType>(), new List<ISensorFactory>()
         {
             new SensorFactory<Npc>(() => new VisibleEntitiesSensor())
@@ -90,6 +95,38 @@ public partial class Npc : CharacterBody3D, IEntity
     public void update(double deltaTime, double currentTime)
     {
         this.brain.update(deltaTime, currentTime);
+
+        #region Detection bullshit
+
+        var detectedEntities = new List<IDetectableEntity>();
+        var contexts = new Dictionary<string, DetectionContext>();
+        var visibleEntities = getBrain().getMemory(MemoryModuleTypes.VISIBLE_ENTITIES);
+
+        foreach (var uuid in visibleEntities.OrElse(new HashSet<string>()))
+        {
+            var entity = getScene().getEntityByUuid(uuid);
+            if (entity != null)
+            {
+                contexts[uuid] = new DetectionContext();
+                detectedEntities.Add(entity.getComponent<DetectableEntityComponent>());
+            }
+        }
+
+        this.detectionManager.processPerception(
+            detectedEntities,
+            contexts,
+            (float)deltaTime
+        );
+
+        foreach (var kvp in this.detectionManager.trackers)
+        {
+            var detectableEntity = kvp.Key;
+            var tracker = kvp.Value;
+
+            GD.Print($"UUID: '{detectableEntity.getUuid()}' : {tracker.value}");
+        }
+
+        #endregion
     }
 
     public override void _PhysicsProcess(double delta)
@@ -100,6 +137,33 @@ public partial class Npc : CharacterBody3D, IEntity
         }
 
         DebugDrawUtils.DebugDrawNpcEye(this);
+
+        var velocity = Velocity;
+
+        // Isaac Newton would be mindblown
+        if (!IsOnFloor())
+            velocity.Y -= gravity * (float)delta;
+        else
+            velocity.Y = 0;
+
+        Velocity = velocity;
+
+        if (TEMP_PATHFINDING_ENABLED)
+        {
+            pathfindingBullshit(delta);
+        }
+
+        MoveAndSlide();
+
+        if (!Position.IsEqualApprox(position))
+        {
+            position = Position;
+            onPositionChanged?.Invoke(this);
+        }
+    }
+
+    private void pathfindingBullshit(double delta)
+    {
         var mapRid = navAgent.GetNavigationMap();
 
         // Wait for the map to be valid before causing a major fuckup
@@ -112,12 +176,6 @@ public partial class Npc : CharacterBody3D, IEntity
         }
 
         var velocity = Velocity;
-
-        // Isaac Newton would be mindblown
-        if (!IsOnFloor())
-            velocity.Y -= gravity * (float)delta;
-        else
-            velocity.Y = 0;
 
         // Only try to move if the agent has a path and also didn't reach it yet
         if (!navAgent.IsTargetReached())
@@ -146,13 +204,6 @@ public partial class Npc : CharacterBody3D, IEntity
         }
 
         Velocity = velocity;
-        MoveAndSlide();
-
-        if (!Position.IsEqualApprox(position))
-        {
-            position = Position;
-            onPositionChanged?.Invoke(this);
-        }
     }
 
     private void targetRandomPosition()

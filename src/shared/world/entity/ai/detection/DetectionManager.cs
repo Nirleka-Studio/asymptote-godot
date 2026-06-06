@@ -22,7 +22,7 @@ public class DetectionManager
 
     private float curiousCooldown;
 
-    private readonly Dictionary<IDetectableEntity, DetectionTracker> trackers = new();
+    public readonly Dictionary<IDetectableEntity, DetectionTracker> trackers = new();
 
     public DetectionManager(Npc agent)
     {
@@ -90,6 +90,7 @@ public class DetectionManager
                 {
                     continue;
                 }
+
                 if (worldEntity == null || !worldEntity.isInScene())
                 {
                     deadEntities.Add(entity);
@@ -101,20 +102,6 @@ public class DetectionManager
                 if (tracker.value <= 0)
                     deadEntities.Add(entity);
             }
-
-            // TODO: Logic to send detection value to clients
-            /* if (worldEntity?.typeId == "player")
-			{
-				var player = worldEntity.getPlayer();
-				// if (!entityValues.ContainsKey(player))
-				//	entityValues[player] = new List<DetectionData>();
-				if (tracker.value < 1.0f || (tracker.value >= 1.0f && !tracker.wasCappedLastFrame))
-				{
-					// For sending it to the client, used in flushToClients
-					// entityValues[player].Add(new DetectionData(agent.getUuid(), agent.getWorldInstance(), tracker.value));
-					tracker.wasCappedLastFrame = tracker.value >= 1.0f;
-				}
-			} */
 
             if (!shouldBeCurious && !tracker.wasCappedLastFrame && tracker.value >= CURIOUS_THRESHOLD)
                 shouldBeCurious = true;
@@ -167,6 +154,7 @@ public class DetectionManager
         {
             tracker.context = context ?? new DetectionContext();
         }
+
         return tracker;
     }
 

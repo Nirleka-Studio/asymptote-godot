@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Asymptote.Shared.World.Entity.Component;
 using Asymptote.Shared.World.Level.Scene;
 using Godot;
 
@@ -17,9 +19,17 @@ public class PlayerEntity : IEntity
     private CharacterBody3D character;
     private Vector3 lastPosition;
 
+    private Dictionary<Type, IEntityComponent> components;
+
     public PlayerEntity(CharacterBody3D character)
     {
         this.character = character;
+        this.components = new()
+        {
+            // HACK: ffs we are setting the key as the class PlayerDetectableEntityComponent is extending to.
+            // Oh well.
+            [typeof(DetectableEntityComponent)] = new PlayerDetectableEntityComponent(this)
+        };
         character.TreeExited += _ExitTree;
     }
 
@@ -52,6 +62,28 @@ public class PlayerEntity : IEntity
     {
         return character.GetRid();
     }
+
+    #region Components
+
+    public bool hasComponent<T>() where T : IEntityComponent
+    {
+        return components.ContainsKey(typeof(T));
+    }
+
+    public T getComponent<T>() where T : IEntityComponent
+    {
+        var component = components[typeof(T)];
+        if (component == null)
+        {
+            throw new Exception($"Component {typeof(T).Name} does not exist");
+        }
+        else
+        {
+            return (T)component;
+        }
+    }
+
+    #endregion
 
     #region Lifecycle
 

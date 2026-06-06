@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Asymptote.Shared.World.Entity.AI.Memory;
+using Asymptote.Shared.World.Entity.Component;
 using Godot;
 
 namespace Asymptote.Shared.World.Entity.AI.Sensing;
@@ -28,6 +29,8 @@ public class VisibleEntitiesSensor : Sensor<Npc>
         foreach (var entity in entitiesInRadius)
         {
             if (entity == agent) continue;
+
+            if (!entity.hasComponent<DetectableEntityComponent>()) continue; // TODO: Should be decoupled
 
             if (this.isInVision(agent, entity))
             {

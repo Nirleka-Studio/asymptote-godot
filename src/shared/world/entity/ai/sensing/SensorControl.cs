@@ -3,7 +3,7 @@ using Asymptote.Shared.World.Entity.AI.Memory;
 
 namespace Asymptote.Shared.World.Entity.AI.Sensing;
 
-public interface SensorControl<T> : ISensorControl
+public interface SensorControl<in T> : ISensorControl
 {
     List<IMemoryModuleType> getRequiredMemories();
     void update(T agent, double deltaTime);

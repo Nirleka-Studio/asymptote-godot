@@ -1,4 +1,5 @@
 using System;
+using Asymptote.Shared.World.Entity.Component;
 using Asymptote.Shared.World.Level.Scene;
 using Godot;
 
@@ -38,4 +39,18 @@ public interface IEntity
     void setScene(Scene scene);
 
     bool isInScene();
+
+    #region Components
+
+    bool hasComponent<T>() where T : IEntityComponent
+    {
+        return false;
+    }
+
+    T getComponent<T>() where T : IEntityComponent
+    {
+        throw new NotImplementedException();
+    }
+
+    #endregion
 }
