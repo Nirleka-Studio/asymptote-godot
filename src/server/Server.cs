@@ -109,6 +109,7 @@ public partial class Server : Node
         // Add it to the actual Scene
         PlayerEntity playerEntity = new PlayerEntity((CharacterBody3D)character);
         playerEntity.uuid = id.ToString();
+        playerEntity.setScene(this.scene);
         this.scene.entityManager.addEntity(playerEntity);
     }
 
