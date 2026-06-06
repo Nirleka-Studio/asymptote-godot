@@ -71,10 +71,15 @@ public partial class Npc : CharacterBody3D, IEntity
 
     public override void _Ready()
     {
+        this.eyeNode = GetNode<Node3D>("EyeVector");
+
+        if (!Multiplayer.IsServer())
+        {
+            return;
+        }
+
         navAgent = new NavigationAgent3D();
         AddChild(navAgent);
-
-        this.eyeNode = GetNode<Node3D>("EyeVector");
 
         // How close the agent should be before stopping
         navAgent.TargetDesiredDistance = TargetThreshold;
@@ -89,6 +94,11 @@ public partial class Npc : CharacterBody3D, IEntity
 
     public override void _PhysicsProcess(double delta)
     {
+        if (!Multiplayer.IsServer())
+        {
+            return;
+        }
+
         DebugDrawUtils.DebugDrawNpcEye(this);
         var mapRid = navAgent.GetNavigationMap();
 

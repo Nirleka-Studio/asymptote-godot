@@ -53,6 +53,8 @@ public partial class Server : Node
     {
         if (!Multiplayer.IsServer())
         {
+            SetPhysicsProcess(false);
+            SetProcess(false);
             return;
         }
 
@@ -83,7 +85,11 @@ public partial class Server : Node
 
     public override void _PhysicsProcess(double delta)
     {
-        this.updateLevel(delta);
+        if (Multiplayer.IsServer())
+        {
+            this.updateLevel(delta);
+        }
+
         base._PhysicsProcess(delta); // Which one should go first bruh?
     }
 
