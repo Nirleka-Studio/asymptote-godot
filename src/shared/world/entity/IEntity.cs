@@ -33,6 +33,8 @@ public interface IEntity
 
     Godot.Vector3 getPosition();
 
+    Godot.Rid getRid();
+
     void setScene(Scene scene);
 
     bool isInScene();

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dj05h3oxextel" path="res://src/client/Startup.gd" id="1_t87yh"]
 [ext_resource type="Script" uid="uid://d02cf4qqdn2vn" path="res://src/client/ui/EscapeMenu.gd" id="2_tpfpu"]
+[ext_resource type="Script" uid="uid://b7ogjbt3mhst4" path="res://src/shared/util/DebugDraw.cs" id="3_ybs1l"]
 
 [node name="Startup" type="Node" unique_id=1580243688]
 script = ExtResource("1_t87yh")
@@ -34,6 +35,9 @@ text = "Host"
 layout_mode = 2
 text = "Connect
 "
+
+[node name="Debug" type="MeshInstance3D" parent="." unique_id=1918250545]
+script = ExtResource("3_ybs1l")
 
 [connection signal="pressed" from="UI/VBoxContainer/ButtonHost" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="UI/VBoxContainer/ButtonConnect" to="." method="_on_client_pressed"]

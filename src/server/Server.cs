@@ -1,3 +1,4 @@
+using System;
 using Asymptote.Shared.World.Entity.player;
 using Asymptote.Shared.World.Level.Scene;
 using Godot;
@@ -12,6 +13,9 @@ public partial class Server : Node
     public Scene scene { get; }
     private double timeAccumulator = 0;
     private ulong currentTick = 0;
+
+    [Signal]
+    public delegate void LevelUpdateFinishedEventHandler();
 
     public Server()
     {
@@ -34,6 +38,7 @@ public partial class Server : Node
         {
             double currentTime = this.currentTick * TICK_RATE;
             this.scene.update(TICK_RATE, currentTime);
+            EmitSignal(SignalName.LevelUpdateFinished);
 
             this.currentTick++;
             this.timeAccumulator -= TICK_RATE;

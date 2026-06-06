@@ -1,5 +1,9 @@
 using System;
+using System.Collections.Generic;
+using Asymptote.Shared.World.Entity.AI;
+using Asymptote.Shared.World.Entity.AI.Sensing;
 using Asymptote.Shared.World.Level.Scene;
+using Asymptote.Util;
 using Godot;
 
 namespace Asymptote.Shared.World.Entity;
@@ -14,6 +18,18 @@ public partial class Npc : CharacterBody3D, IEntity
     public int instId { get; set; }
     public event Action<IEntity> onPositionChanged;
     public event Action<IEntity> onRemovedFromWorld;
+
+    private Node3D eyeNode;
+
+    private Brain<Npc> brain;
+
+    public Npc()
+    {
+        this.brain = new Brain<Npc>(this, new List<IMemoryModuleType>(), new List<ISensorFactory>()
+        {
+            new SensorFactory<Npc>(() => new VisibleEntitiesSensor())
+        });
+    }
 
     #region Navigation
 
@@ -47,25 +63,32 @@ public partial class Npc : CharacterBody3D, IEntity
         return scene != null;
     }
 
+    public Brain<Npc> getBrain()
+    {
+        return this.brain;
+    }
+
     public override void _Ready()
     {
-        GD.Print("NPC is ready!");
-
         navAgent = new NavigationAgent3D();
         AddChild(navAgent);
+
+        this.eyeNode = GetNode<Node3D>("EyeVector");
 
         // How close the agent should be before stopping
         navAgent.TargetDesiredDistance = TargetThreshold;
         navAgent.TargetReached += onTargetReached;
     }
 
+    // TODO: Should replace _PhysicsProcess
     public void update(double deltaTime, double currentTime)
     {
-        return; // TODO: Should replace _PhysicsProcess
+        this.brain.update(deltaTime, currentTime);
     }
 
     public override void _PhysicsProcess(double delta)
     {
+        DebugDrawUtils.DebugDrawNpcEye(this);
         var mapRid = navAgent.GetNavigationMap();
 
         // Wait for the map to be valid before causing a major fuckup
@@ -161,5 +184,20 @@ public partial class Npc : CharacterBody3D, IEntity
     public Scene getScene()
     {
         return scene;
+    }
+
+    public Vector3 getEyeVector()
+    {
+        return -eyeNode.GlobalTransform.Basis.Z;
+    }
+
+    public Vector3 getEyePosition()
+    {
+        return eyeNode.GlobalPosition;
+    }
+
+    public Rid getRid()
+    {
+        return GetRid();
     }
 }

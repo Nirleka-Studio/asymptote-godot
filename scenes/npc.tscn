@@ -9,6 +9,9 @@
 [node name="Npc" type="CharacterBody3D" unique_id=2027353190]
 script = ExtResource("1_nh2m4")
 
+[node name="EyeVector" type="Node3D" parent="." unique_id=1165946050]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6147208, 0)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=449574955]
 shape = SubResource("CapsuleShape3D_tcuxl")
 

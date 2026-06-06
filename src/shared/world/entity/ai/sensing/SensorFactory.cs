@@ -2,7 +2,7 @@ namespace Asymptote.Shared.World.Entity.AI.Sensing;
 
 using System;
 
-public class SensorFactory<T> where T : Npc
+public class SensorFactory<T> : ISensorFactory where T : Npc
 {
     private readonly Func<Sensor<T>> sensorConstructor;
 
@@ -15,9 +15,14 @@ public class SensorFactory<T> where T : Npc
     {
         return this.sensorConstructor();
     }
+
+    ISensorControl ISensorFactory.create() // The compiler can shut the fuck up now.
+    {
+        return this.create();
+    }
 }
 
 public interface ISensorFactory
 {
-    public object create();
+    public ISensorControl create();
 }

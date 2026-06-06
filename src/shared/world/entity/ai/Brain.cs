@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Asymptote.Shared.World.Entity.AI.Sensing;
 using Asymptote.Util;
+using Godot;
 
 namespace Asymptote.Shared.World.Entity.AI;
 
@@ -15,7 +16,10 @@ public class Brain<E> where E : Npc
     private HashSet<Activity> activeActivities = new();
     private Dictionary<Activity, Dictionary<IMemoryModuleType, MemoryStatus>> activityRequirements = new();
     private Dictionary<Activity, HashSet<IMemoryModuleType>> activityMemoriesToEraseWhenStopped = new();
-    private readonly SortedDictionary<int, Dictionary<Activity, HashSet<BehaviorControl<E>>>> availableBehaviorsByPriority = new();
+
+    private readonly SortedDictionary<int, Dictionary<Activity, HashSet<BehaviorControl<E>>>>
+        availableBehaviorsByPriority = new();
+
     private HashSet<Activity> coreActivities = new();
 
     public Brain(
@@ -78,8 +82,8 @@ public class Brain<E> where E : Npc
         }
 
         return memoryStatus == MemoryStatus.REGISTERED
-            || (memoryStatus == MemoryStatus.VALUE_PRESENT && optional.IsPresent())
-            || (memoryStatus == MemoryStatus.VALUE_ABSENT && !optional.IsPresent());
+               || (memoryStatus == MemoryStatus.VALUE_PRESENT && optional.IsPresent())
+               || (memoryStatus == MemoryStatus.VALUE_ABSENT && !optional.IsPresent());
     }
 
     // For FUCK'S SAKE
@@ -98,11 +102,12 @@ public class Brain<E> where E : Npc
         }
 
         return memoryStatus == MemoryStatus.REGISTERED
-            || (memoryStatus == MemoryStatus.VALUE_PRESENT && optional.IsPresent())
-            || (memoryStatus == MemoryStatus.VALUE_ABSENT && !optional.IsPresent());
+               || (memoryStatus == MemoryStatus.VALUE_PRESENT && optional.IsPresent())
+               || (memoryStatus == MemoryStatus.VALUE_ABSENT && !optional.IsPresent());
     }
 
     #endregion
+
     #region Memory Setters
 
     public void setMemory<U>(MemoryModuleType<U> memoryType, U value) where U : class
@@ -136,7 +141,8 @@ public class Brain<E> where E : Npc
         }
     }
 
-    internal void setMemoryInternal<U>(MemoryModuleType<U> memoryType, Optional<ExpireableValue<U>> optional) where U : class
+    internal void setMemoryInternal<U>(MemoryModuleType<U> memoryType, Optional<ExpireableValue<U>> optional)
+        where U : class
     {
         if (this.memories.ContainsKey((IMemoryModuleType)memoryType))
         {
@@ -367,7 +373,7 @@ public class Brain<E> where E : Npc
         return behaviorControlsArray;
     }
 
-    public void update(float deltaTime, float currentTime)
+    public void update(double deltaTime, double currentTime)
     {
         this.forgetExpiredMemories(deltaTime);
         this.updateSensors(deltaTime);
@@ -375,7 +381,7 @@ public class Brain<E> where E : Npc
         this.updateEachRunningBehavior(deltaTime, currentTime);
     }
 
-    private void updateSensors(float deltaTime)
+    private void updateSensors(double deltaTime)
     {
         foreach (var kvp in this.sensors)
         {
@@ -384,7 +390,7 @@ public class Brain<E> where E : Npc
         }
     }
 
-    private void forgetExpiredMemories(float deltaTime)
+    private void forgetExpiredMemories(double deltaTime)
     {
         foreach (var kvp in this.memories)
         {
@@ -407,7 +413,7 @@ public class Brain<E> where E : Npc
         }
     }
 
-    private void startEachNonRunningBehavior(float deltaTime, float currentTime)
+    private void startEachNonRunningBehavior(double deltaTime, double currentTime)
     {
         foreach (var priorityKvp in this.availableBehaviorsByPriority)
         {
@@ -436,7 +442,7 @@ public class Brain<E> where E : Npc
         }
     }
 
-    private void updateEachRunningBehavior(float deltaTime, float currentTime)
+    private void updateEachRunningBehavior(double deltaTime, double currentTime)
     {
         foreach (var behaviorControl in this.getRunningBehaviors())
         {

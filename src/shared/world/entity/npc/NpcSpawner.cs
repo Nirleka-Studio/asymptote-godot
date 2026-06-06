@@ -52,5 +52,6 @@ public partial class NpcSpawner : Node3D
         character.setScene(this.scene);
         character.GlobalPosition = GlobalPosition;
         character.GlobalRotation = GlobalRotation;
+        this.scene.entityManager.addEntity(character);
     }
 }

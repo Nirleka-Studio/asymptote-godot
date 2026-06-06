@@ -10,7 +10,7 @@ public class ExpireableValue<T>
     {
         this.value = value;
         this.timeToLive = timeToLive;
-        this._canExpire = timeToLive != float.PositiveInfinity;
+        this._canExpire = float.IsPositiveInfinity(timeToLive);
     }
 
     public static ExpireableValue<T> nonExpiring(T value)
@@ -30,7 +30,7 @@ public class ExpireableValue<T>
 
     public bool canExpire()
     {
-        return this.timeToLive != float.PositiveInfinity;
+        return this._canExpire;
     }
 
     public bool isExpired()
@@ -51,5 +51,5 @@ public interface IExpireableValue
 {
     object getValue();
     bool isExpired();
-    void update(float deltaTime);
+    void update(double deltaTime);
 }

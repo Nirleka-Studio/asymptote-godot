@@ -48,6 +48,11 @@ public class PlayerEntity : IEntity
         return scene;
     }
 
+    public Rid getRid()
+    {
+        return character.GetRid();
+    }
+
     #region Lifecycle
 
     public void update(double delta, double currentTime)
