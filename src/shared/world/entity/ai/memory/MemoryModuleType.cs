@@ -4,14 +4,18 @@ using Asymptote.Util;
 
 namespace Asymptote.Shared.World.Entity.AI;
 
-public class MemoryModuleTypes : IMemoryModuleType
+public static class MemoryModuleTypes
 {
     public static readonly MemoryModuleType<bool> IS_CURIOUS = new MemoryModuleType<bool>("is_curious");
+
+    public static readonly MemoryModuleType<HashSet<string>> VISIBLE_ENTITIES =
+        new MemoryModuleType<HashSet<string>>("visible_entities");
 }
 
-public class MemoryModuleType<U>
+public class MemoryModuleType<U> : IMemoryModuleType
 {
     public string name { get; }
+
     internal MemoryModuleType(string name)
     {
         this.name = name;
@@ -19,4 +23,6 @@ public class MemoryModuleType<U>
 }
 
 // Sadly C# doesn't have wildcards or `any` type so we gotta do this shit.
-public interface IMemoryModuleType { }
+public interface IMemoryModuleType
+{
+}
