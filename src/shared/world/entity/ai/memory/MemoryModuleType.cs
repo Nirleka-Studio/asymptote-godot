@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
-using Asymptote.Util;
 
-namespace Asymptote.Shared.World.Entity.AI;
+namespace Asymptote.Shared.World.Entity.AI.Memory;
 
 public static class MemoryModuleTypes
 {

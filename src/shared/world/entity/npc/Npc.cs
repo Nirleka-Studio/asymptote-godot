@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Asymptote.Shared.World.Entity.AI;
+using Asymptote.Shared.World.Entity.AI.Memory;
 using Asymptote.Shared.World.Entity.AI.Sensing;
 using Asymptote.Shared.World.Level.Scene;
 using Asymptote.Util;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Asymptote.Shared.World.Entity.AI.Memory;
 
 namespace Asymptote.Shared.World.Entity.AI.Sensing;
 

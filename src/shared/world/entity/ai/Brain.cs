@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Asymptote.Shared.World.Entity.AI.Memory;
 using Asymptote.Shared.World.Entity.AI.Sensing;
 using Asymptote.Util;
 using Godot;
