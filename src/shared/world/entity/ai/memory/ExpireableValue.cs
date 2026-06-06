@@ -1,9 +1,9 @@
 namespace Asymptote.Shared.World.Entity.AI.Memory;
 
-public class ExpireableValue<T>
+public class ExpireableValue<T> : IExpireableValue
 {
     private T value;
-    private float timeToLive;
+    private double timeToLive;
     private bool _canExpire;
 
     public ExpireableValue(T value, float timeToLive)
@@ -23,7 +23,13 @@ public class ExpireableValue<T>
         return this.value;
     }
 
-    public float getTimeToLive()
+    // Go fuck yourself compiler
+    object IExpireableValue.getValue()
+    {
+        return this.value;
+    }
+
+    public double getTimeToLive()
     {
         return this.timeToLive;
     }
@@ -38,7 +44,7 @@ public class ExpireableValue<T>
         return _canExpire && this.timeToLive <= 0;
     }
 
-    public void update(float deltaTime)
+    public void update(double deltaTime)
     {
         if (this._canExpire)
         {

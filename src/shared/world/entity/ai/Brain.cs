@@ -154,14 +154,14 @@ public class Brain<E> where E : Npc
             else
             {
                 // Type black magic, map the inner ExpireableValue<U> to the IExpireableValue interface.
-                this.memories[(IMemoryModuleType)memoryType] = optional.Map(val => (IExpireableValue)val);
+                this.memories[memoryType] = optional.Map(val => (IExpireableValue)val);
             }
         }
     }
 
     private bool isEmptyContainer<U>(U value)
     {
-        return value is IEnumerable && value is not string;
+        return value is ICollection c && c.Count == 0;
     }
 
     #endregion
