@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Asymptote.Shared.World.Entity.Component;
 using Asymptote.Shared.World.Level.Scene;
 using Godot;
@@ -9,7 +10,7 @@ public interface IEntity
 {
     string uuid { get; set; }
 
-    int instId { get; }
+    int instId { get; internal set; }
 
     // Native function pointers replacing the EntityInLevelCallback blueprint
     public event Action<IEntity> onPositionChanged;

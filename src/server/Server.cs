@@ -1,6 +1,7 @@
 using System;
 using Asymptote.Shared.World.Entity.Player;
 using Asymptote.Shared.World.Level.Scene;
+using Asymptote.Util;
 using Godot;
 
 namespace Asymptote.Server;
@@ -14,12 +15,22 @@ public partial class Server : Node
     private double timeAccumulator = 0;
     private ulong currentTick = 0;
 
+    private EntitySectionDebugRenderer sectionsDebugger;
+
     [Signal]
     public delegate void LevelUpdateFinishedEventHandler();
 
     public Server()
     {
         this.scene = new Scene();
+
+        if (OS.IsDebugBuild())
+        {
+            this.sectionsDebugger = new EntitySectionDebugRenderer();
+            AddChild(sectionsDebugger);
+
+            sectionsDebugger.Initialize(this.scene.entityManager);
+        }
     }
 
     #region Level

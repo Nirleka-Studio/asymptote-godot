@@ -2,12 +2,15 @@ using Asymptote.Shared.World.Entity;
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace Asymptote.Shared.World.Level.Entity;
 
 public class EntitySectionManager
 {
-    private const float SECTION_SIZE = 16.0f;
+    private static int idCounter = 0;
+    public static readonly float SECTION_SIZE = 16.0f;
     private readonly Dictionary<Vector3I, HashSet<IEntity>> sections = new();
     private readonly Dictionary<IEntity, Vector3I> entityToSection = new();
     private readonly Dictionary<string, IEntity> uuidToEntity = new();
@@ -34,6 +37,11 @@ public class EntitySectionManager
         {
             entity.setUuid(Guid.NewGuid().ToString());
         }
+
+        // This feels fucking illegal
+        // But it solves the fucking problem that will otherwise be a pain in the ass
+        // if done the other way.
+        entity.instId = Interlocked.Increment(ref idCounter);
 
         Vector3 pos = entity.getPosition();
         Vector3I key = getSectionKey(pos);
@@ -145,5 +153,13 @@ public class EntitySectionManager
         }
 
         return foundEntities;
+    }
+
+    internal Dictionary<Vector3I, List<IEntity>> getActiveSections()
+    {
+        return sections.ToDictionary(
+            kvp => kvp.Key,
+            kvp => kvp.Value.ToList()
+        );
     }
 }

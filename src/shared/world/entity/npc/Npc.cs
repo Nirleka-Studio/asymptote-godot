@@ -13,7 +13,7 @@ namespace Asymptote.Shared.World.Entity;
 
 public partial class Npc : CharacterBody3D, IEntity
 {
-    private static bool TEMP_PATHFINDING_ENABLED = false;
+    private static bool TEMP_PATHFINDING_ENABLED = true;
     public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
     private Scene scene { get; set; }
 
