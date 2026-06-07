@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Asymptote.Shared.World.Entity.AI.Behavior;
 using Asymptote.Shared.World.Entity.AI.Memory;
 using Asymptote.Shared.World.Entity.AI.Sensing;
 using Asymptote.Util;
@@ -361,7 +362,7 @@ public class Brain<E> where E : Npc
                 var behaviorControls = kvp1.Value;
                 foreach (var behaviorControl in behaviorControls)
                 {
-                    if (behaviorControl.getStatus() != Status.RUNNING)
+                    if (behaviorControl.getStatus() != BehaviorStatus.RUNNING)
                     {
                         continue;
                     }
@@ -432,7 +433,7 @@ public class Brain<E> where E : Npc
 
                 foreach (var behaviorControl in behaviorControls)
                 {
-                    if (behaviorControl.getStatus() != Status.STOPPED)
+                    if (behaviorControl.getStatus() != BehaviorStatus.STOPPED)
                     {
                         continue;
                     }

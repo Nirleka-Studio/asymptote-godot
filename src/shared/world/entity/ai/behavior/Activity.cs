@@ -1,4 +1,4 @@
-namespace Asymptote.Shared.World.Entity.AI;
+namespace Asymptote.Shared.World.Entity.AI.Behavior;
 
 public class Activity
 {
