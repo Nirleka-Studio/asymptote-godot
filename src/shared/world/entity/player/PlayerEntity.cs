@@ -4,7 +4,7 @@ using Asymptote.Shared.World.Entity.Component;
 using Asymptote.Shared.World.Level.Scene;
 using Godot;
 
-namespace Asymptote.Shared.World.Entity.player;
+namespace Asymptote.Shared.World.Entity.Player;
 
 public class PlayerEntity : IEntity
 {

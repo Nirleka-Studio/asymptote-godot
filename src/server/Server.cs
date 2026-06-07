@@ -1,5 +1,5 @@
 using System;
-using Asymptote.Shared.World.Entity.player;
+using Asymptote.Shared.World.Entity.Player;
 using Asymptote.Shared.World.Level.Scene;
 using Godot;
 

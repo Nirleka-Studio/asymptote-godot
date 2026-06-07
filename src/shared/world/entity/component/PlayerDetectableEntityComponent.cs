@@ -1,5 +1,5 @@
 using Asymptote.Shared.World.Entity.AI.Detection;
-using Asymptote.Shared.World.Entity.player;
+using Asymptote.Shared.World.Entity.Player;
 
 namespace Asymptote.Shared.World.Entity.Component;
 
