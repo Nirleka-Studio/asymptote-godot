@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Asymptote.Shared.Engine.Expression.Context;
 using Asymptote.Shared.Engine.Expression.Tree;
-using Asymptote.Util.String;
+using StringReader = Asymptote.Util.String.StringReader;
 
 namespace Asymptote.Shared.Engine.Expression;
 
