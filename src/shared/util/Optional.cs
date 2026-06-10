@@ -6,7 +6,6 @@ using System.Threading;
 // Originally written by hakenmt, Michael Haken.
 // https://github.com/bamcis-io/Optional.NET/blob/main/Optional.NET/Optional.cs
 namespace Asymptote.Util
-
 {
     /// <summary>
     /// A container object which may or may not contain a non-null value.
@@ -344,7 +343,7 @@ namespace Asymptote.Util
 
         public override string ToString()
         {
-            return this.Value != null ? String.Format("Optional[{0}]", this.Value) : "Optional.empty";
+            return this.Value != null ? $"Optional[{this.Value}]" : "Optional.empty";
         }
 
         public static bool operator ==(Optional<T> left, Optional<T> right)
