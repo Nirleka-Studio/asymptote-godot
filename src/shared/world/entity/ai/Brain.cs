@@ -13,7 +13,7 @@ public class Brain<E> where E : Npc
 {
     private E agent;
     private Activity defaultActivity = Activity.IDLE;
-    private Dictionary<IMemoryModuleType, Optional<IExpireableValue>> memories = new();
+    private Dictionary<IMemoryModuleType, Optional<IExpirableValue>> memories = new();
     private Dictionary<ISensorFactory, SensorControl<E>> sensors = new();
     private HashSet<Activity> activeActivities = new();
     private Dictionary<Activity, Dictionary<IMemoryModuleType, MemoryStatus>> activityRequirements = new();
@@ -34,7 +34,7 @@ public class Brain<E> where E : Npc
 
         foreach (var memoryModuleType in memories)
         {
-            this.memories[memoryModuleType] = Optional<IExpireableValue>.Empty;
+            this.memories[memoryModuleType] = Optional<IExpirableValue>.Empty;
         }
 
         foreach (var sensorFactory in sensors)
@@ -47,7 +47,7 @@ public class Brain<E> where E : Npc
             var sensor = kvp.Value;
             foreach (var memoryModuleType in sensor.getRequiredMemories())
             {
-                this.memories.Add(memoryModuleType, Optional<IExpireableValue>.Empty);
+                this.memories.Add(memoryModuleType, Optional<IExpirableValue>.Empty);
             }
         }
     }
@@ -139,7 +139,7 @@ public class Brain<E> where E : Npc
     {
         if (this.memories.ContainsKey(memoryType))
         {
-            this.memories[memoryType] = Optional<IExpireableValue>.Empty;
+            this.memories[memoryType] = Optional<IExpirableValue>.Empty;
         }
     }
 
@@ -154,8 +154,8 @@ public class Brain<E> where E : Npc
             }
             else
             {
-                // Type black magic, map the inner ExpirableValue<U> to the IExpireableValue interface.
-                this.memories[memoryType] = optional.Map(val => (IExpireableValue)val);
+                // Type black magic, map the inner ExpirableValue<U> to the IExpirableValue interface.
+                this.memories[memoryType] = optional.Map(val => (IExpirableValue)val);
             }
         }
     }

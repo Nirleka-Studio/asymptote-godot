@@ -1,6 +1,6 @@
 namespace Asymptote.Shared.World.Entity.AI.Memory;
 
-public class ExpirableValue<T> : IExpireableValue
+public class ExpirableValue<T> : IExpirableValue
 {
     private T value;
     private double timeToLive;
@@ -24,7 +24,7 @@ public class ExpirableValue<T> : IExpireableValue
     }
 
     // Go fuck yourself compiler
-    object IExpireableValue.getValue()
+    object IExpirableValue.getValue()
     {
         return this.value;
     }
@@ -53,7 +53,7 @@ public class ExpirableValue<T> : IExpireableValue
     }
 }
 
-public interface IExpireableValue
+public interface IExpirableValue
 {
     object getValue();
     bool isExpired();
