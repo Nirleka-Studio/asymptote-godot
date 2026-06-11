@@ -2,9 +2,9 @@ namespace Asymptote.Shared.World.Entity.AI.Memory;
 
 public class ExpirableValue<T> : IExpirableValue
 {
-    private T value;
+    private readonly T value;
     private double timeToLive;
-    private bool _canExpire;
+    private readonly bool _canExpire;
 
     public ExpirableValue(T value, float timeToLive)
     {
