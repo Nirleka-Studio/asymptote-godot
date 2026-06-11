@@ -116,7 +116,7 @@ public class Brain<E> where E : Npc
     {
         this.setMemoryInternal(
             memoryType,
-            Optional<U>.OfNullable(value).Map(v => ExpireableValue<U>.nonExpiring(v))
+            Optional<U>.OfNullable(value).Map(v => ExpirableValue<U>.nonExpiring(v))
         );
     }
 
@@ -124,13 +124,13 @@ public class Brain<E> where E : Npc
     {
         this.setMemoryInternal(
             memoryType,
-            Optional<ExpireableValue<U>>.Of(new ExpireableValue<U>(value, ttl))
+            Optional<ExpirableValue<U>>.Of(new ExpirableValue<U>(value, ttl))
         );
     }
 
     public void eraseMemory<U>(MemoryModuleType<U> memoryType) where U : class
     {
-        this.setMemoryInternal(memoryType, Optional<ExpireableValue<U>>.Empty);
+        this.setMemoryInternal(memoryType, Optional<ExpirableValue<U>>.Empty);
     }
 
     // This overload doesn't ask for <U>, so you can call it from your foreach loop safely.
@@ -143,7 +143,7 @@ public class Brain<E> where E : Npc
         }
     }
 
-    internal void setMemoryInternal<U>(MemoryModuleType<U> memoryType, Optional<ExpireableValue<U>> optional)
+    internal void setMemoryInternal<U>(MemoryModuleType<U> memoryType, Optional<ExpirableValue<U>> optional)
         where U : class
     {
         if (this.memories.ContainsKey((IMemoryModuleType)memoryType))
@@ -154,7 +154,7 @@ public class Brain<E> where E : Npc
             }
             else
             {
-                // Type black magic, map the inner ExpireableValue<U> to the IExpireableValue interface.
+                // Type black magic, map the inner ExpirableValue<U> to the IExpireableValue interface.
                 this.memories[memoryType] = optional.Map(val => (IExpireableValue)val);
             }
         }

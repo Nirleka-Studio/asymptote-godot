@@ -1,21 +1,21 @@
 namespace Asymptote.Shared.World.Entity.AI.Memory;
 
-public class ExpireableValue<T> : IExpireableValue
+public class ExpirableValue<T> : IExpireableValue
 {
     private T value;
     private double timeToLive;
     private bool _canExpire;
 
-    public ExpireableValue(T value, float timeToLive)
+    public ExpirableValue(T value, float timeToLive)
     {
         this.value = value;
         this.timeToLive = timeToLive;
         this._canExpire = float.IsFinite(timeToLive);
     }
 
-    public static ExpireableValue<T> nonExpiring(T value)
+    public static ExpirableValue<T> nonExpiring(T value)
     {
-        return new ExpireableValue<T>(value, float.PositiveInfinity);
+        return new ExpirableValue<T>(value, float.PositiveInfinity);
     }
 
     public T getValue()
