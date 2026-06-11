@@ -10,7 +10,7 @@ public class ExpireableValue<T> : IExpireableValue
     {
         this.value = value;
         this.timeToLive = timeToLive;
-        this._canExpire = float.IsPositiveInfinity(timeToLive);
+        this._canExpire = float.IsFinite(timeToLive);
     }
 
     public static ExpireableValue<T> nonExpiring(T value)
