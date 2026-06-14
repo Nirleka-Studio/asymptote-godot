@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://vuhh772oec5y"]
 
-[ext_resource type="Script" uid="uid://b1u60ncp52vgt" path="res://src/client/character/CharacterController.gd" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://c7ohf44ip775i" path="res://src/shared/world/entity/player/PlayerEntity.cs" id="1_g2els"]
 [ext_resource type="Script" uid="uid://cxx7f1y63lnwo" path="res://src/client/character/CameraController.gd" id="2_g2els"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sh265"]
@@ -21,7 +21,7 @@ properties/2/replication_mode = 0
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qhqgy"]
 
 [node name="Player" type="CharacterBody3D" unique_id=1231463351]
-script = ExtResource("1_3vyb7")
+script = ExtResource("1_g2els")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=749973906]
 shape = SubResource("CapsuleShape3D_sh265")

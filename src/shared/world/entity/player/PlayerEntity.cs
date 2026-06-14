@@ -6,7 +6,7 @@ using Godot;
 
 namespace Asymptote.Shared.World.Entity.Player;
 
-public class PlayerEntity : IEntity
+public partial class PlayerEntity : CharacterBody3D, IEntity
 {
     private Scene scene { get; set; }
 
@@ -21,9 +21,9 @@ public class PlayerEntity : IEntity
 
     private Dictionary<Type, IEntityComponent> components;
 
-    public PlayerEntity(CharacterBody3D character)
+    public PlayerEntity()
     {
-        this.character = character;
+        this.character = this;
         this.components = new()
         {
             // HACK: ffs we are setting the key as the class PlayerDetectableEntityComponent is extending to.

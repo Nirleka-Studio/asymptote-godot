@@ -118,7 +118,7 @@ public partial class Server : Node
         var player = (Player)playerScene.Instantiate();
 
         PackedScene characterScene = GD.Load<PackedScene>("res://scenes/player.tscn");
-        Node character = characterScene.Instantiate();
+        var character = (PlayerEntity)characterScene.Instantiate();
 
         player.peerId = id;
         player.name = id.ToString(); // for now
@@ -126,10 +126,9 @@ public partial class Server : Node
         GetNode("Players").AddChild(character, true);
 
         // Add it to the actual Scene
-        PlayerEntity playerEntity = new((CharacterBody3D)character);
-        playerEntity.uuid = id.ToString();
-        playerEntity.setScene(this.scene);
-        this.scene.entityManager.addEntity(playerEntity);
+        character.uuid = id.ToString();
+        character.setScene(this.scene);
+        this.scene.entityManager.addEntity(character);
     }
 
     private void onPlayerLeft(long id)
