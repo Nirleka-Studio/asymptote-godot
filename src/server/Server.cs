@@ -18,9 +18,6 @@ public partial class Server : Node
 
     private EntitySectionDebugRenderer sectionsDebugger;
 
-    [Signal]
-    public delegate void LevelUpdateFinishedEventHandler();
-
     public Server()
     {
         this.scene = new Scene();
@@ -50,7 +47,6 @@ public partial class Server : Node
         {
             double currentTime = this.currentTick * TICK_RATE;
             this.scene.update(TICK_RATE, currentTime);
-            EmitSignal(SignalName.LevelUpdateFinished);
 
             this.currentTick++;
             this.timeAccumulator -= TICK_RATE;
