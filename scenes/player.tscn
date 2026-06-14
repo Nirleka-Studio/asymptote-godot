@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://vuhh772oec5y"]
 
+[ext_resource type="Script" uid="uid://b1u60ncp52vgt" path="res://src/client/character/CharacterController.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://c7ohf44ip775i" path="res://src/shared/world/entity/player/PlayerEntity.cs" id="1_g2els"]
 [ext_resource type="Script" uid="uid://cxx7f1y63lnwo" path="res://src/client/character/CameraController.gd" id="2_g2els"]
 
@@ -42,3 +43,6 @@ replication_config = SubResource("SceneReplicationConfig_g2els")
 [node name="PlayerInput" type="MultiplayerSynchronizer" parent="." unique_id=1963860517]
 root_path = NodePath(".")
 replication_config = SubResource("SceneReplicationConfig_qhqgy")
+
+[node name="CharacterController" type="Node3D" parent="." unique_id=718993067]
+script = ExtResource("1_3vyb7")
