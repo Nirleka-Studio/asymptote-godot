@@ -4,7 +4,7 @@ namespace Asymptote.Shared.World.Entity.Component;
 
 public abstract class DetectableEntityComponent : EntityComponent<IEntity>, IDetectableEntity
 {
-    private IEntity entity;
+    public IEntity entity { get; }
 
     public DetectableEntityComponent(IEntity entity)
     {
