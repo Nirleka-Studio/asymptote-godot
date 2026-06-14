@@ -1,6 +1,7 @@
 using System;
 using Asymptote.Shared.World.Entity.Player;
 using Asymptote.Shared.World.Level.Scene;
+using Asymptote.Shared.World.Player;
 using Asymptote.Util;
 using Godot;
 
@@ -101,7 +102,7 @@ public partial class Server : Node
             this.updateLevel(delta);
         }
 
-        base._PhysicsProcess(delta); // Which one should go first bruh?
+        base._PhysicsProcess(delta);
     }
 
     private void onPlayerJoined(long id)
@@ -110,15 +111,22 @@ public partial class Server : Node
 
         GD.Print($"Adding player {id}");
 
-        PackedScene playerScene = GD.Load<PackedScene>("res://scenes/player.tscn");
-        Node character = playerScene.Instantiate();
+        // To decouple the player CONNECTION instance and the player CHARACTER (entity),
+        // `player_instance` will represent the connection and `player` is the actual character entity which exists
+        // in the world.
+        PackedScene playerScene = GD.Load<PackedScene>("res://scenes/player_instance.tscn");
+        var player = (Player)playerScene.Instantiate();
 
-        character.Set("player", id);
-        character.Name = id.ToString();
+        PackedScene characterScene = GD.Load<PackedScene>("res://scenes/player.tscn");
+        Node character = characterScene.Instantiate();
+
+        player.peerId = id;
+        player.name = id.ToString(); // for now
+        character.Name = id.ToString(); // to get the peer_id
         GetNode("Players").AddChild(character, true);
 
         // Add it to the actual Scene
-        PlayerEntity playerEntity = new PlayerEntity((CharacterBody3D)character);
+        PlayerEntity playerEntity = new((CharacterBody3D)character);
         playerEntity.uuid = id.ToString();
         playerEntity.setScene(this.scene);
         this.scene.entityManager.addEntity(playerEntity);

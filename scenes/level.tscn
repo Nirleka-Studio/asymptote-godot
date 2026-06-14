@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cyhae2muwf70a"]
 
 [ext_resource type="Script" uid="uid://gb8q1upwqqwc" path="res://src/server/Server.cs" id="1_mx8sn"]
+[ext_resource type="Script" uid="uid://cyyxw52sre1bd" path="res://src/shared/world/level/zone/Zone.cs" id="2_ppgk2"]
 [ext_resource type="Script" uid="uid://cok4r5m1vpuny" path="res://test/prompt/ui_prompt.gd" id="2_w7c3h"]
 [ext_resource type="FontFile" uid="uid://6b3oapugoud7" path="res://assets/fonts/Zekton-Regular.otf" id="3_w8frs"]
 [ext_resource type="Script" uid="uid://cxotx2a6rv136" path="res://src/shared/world/entity/npc/NpcSpawner.cs" id="4_mx8sn"]
@@ -19,6 +20,17 @@ polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(4, 3, 2), PackedInt32Arr
 script = ExtResource("1_mx8sn")
 
 [node name="Players" type="Node3D" parent="." unique_id=378380871]
+
+[node name="Zones" type="Node3D" parent="." unique_id=1160003647]
+
+[node name="Zone" type="Area3D" parent="Zones" unique_id=54323577]
+monitoring = false
+monitorable = false
+script = ExtResource("2_ppgk2")
+
+[node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="Zones/Zone" unique_id=1023768937]
+transform = Transform3D(17.774395, 0, 0, 0, 0.7609736, 0, 0, 0, 55.152317, 14.391327, 0, -20.988956)
+polygon = PackedVector2Array(-0.20433235, 13.009787)
 
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=969502010]
 _spawnable_scenes = PackedStringArray("uid://vuhh772oec5y")

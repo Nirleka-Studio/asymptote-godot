@@ -17,7 +17,7 @@ signal zoom_changed(is_first_person: bool)
 @export var fov_lerp_speed: float = 0.1
 
 @onready var camera: Camera3D = $Camera3D
-@onready var player: Player = get_parent()
+@onready var player: CharacterBody3D = get_parent()
 
 var zoom_state: float = 1.0  # 0 = First Person, 1 = Third Person
 var current_zoom: float = 1.0

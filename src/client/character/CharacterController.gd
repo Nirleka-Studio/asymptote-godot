@@ -1,4 +1,4 @@
-extends Player
+extends CharacterBody3D
 class_name CharacterController
 
 const SPEED = 5.0
@@ -12,6 +12,8 @@ const JUMP_VELOCITY_MIN := 0.6  # For short hops
 @onready var camera_pivot: CameraController = $CameraPivot
 
 func _enter_tree() -> void:
+	# This is a terrible way to do this.
+	# But I have no choice since we can't bridge CS to GDScript.
 	var peer_id: int = name.to_int()
 	set_multiplayer_authority(peer_id)
 
