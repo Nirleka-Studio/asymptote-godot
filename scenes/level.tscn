@@ -6,6 +6,9 @@
 [ext_resource type="FontFile" uid="uid://6b3oapugoud7" path="res://assets/fonts/Zekton-Regular.otf" id="3_w8frs"]
 [ext_resource type="Script" uid="uid://cxotx2a6rv136" path="res://src/shared/world/entity/npc/NpcSpawner.cs" id="4_mx8sn"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_mx8sn"]
+size = Vector3(36.632263, 17.762695, 32.302277)
+
 [sub_resource type="NavigationMesh" id="NavigationMesh_mx8sn"]
 vertices = PackedVector3Array(-7.3689394, 8.088791, 3.5916998, -4.1189394, 8.088791, 3.5916998, -4.3689394, 8.088791, 1.5916998, -2.1189394, 8.088791, 1.3416998, -2.1189394, 8.088791, -3.1583002, -7.3689394, 8.088791, -3.1583002, -1.6189394, 8.088791, 1.5916998, 7.3810606, 8.088791, 3.5916998, 7.3810606, 8.088791, -3.1583002, -1.8689394, 8.088791, 3.5916998)
 polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(4, 3, 2), PackedInt32Array(0, 5, 2), PackedInt32Array(2, 5, 4), PackedInt32Array(3, 4, 6), PackedInt32Array(6, 4, 8), PackedInt32Array(6, 8, 7), PackedInt32Array(7, 9, 6)]
@@ -23,14 +26,13 @@ script = ExtResource("1_mx8sn")
 
 [node name="Zones" type="Node3D" parent="." unique_id=1160003647]
 
-[node name="Zone" type="Area3D" parent="Zones" unique_id=54323577]
-monitoring = false
-monitorable = false
+[node name="Zone" type="Area3D" parent="Zones" unique_id=1177143884]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8169918, 0, -11.869019)
 script = ExtResource("2_ppgk2")
 
-[node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="Zones/Zone" unique_id=1023768937]
-transform = Transform3D(17.774395, 0, 0, 0, 0.7609736, 0, 0, 0, 55.152317, 14.391327, 0, -20.988956)
-polygon = PackedVector2Array(-0.20433235, 13.009787)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Zones/Zone" unique_id=1127502186]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.816132, 8.381348, 1.946579)
+shape = SubResource("BoxShape3D_mx8sn")
 
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=969502010]
 _spawnable_scenes = PackedStringArray("uid://vuhh772oec5y")

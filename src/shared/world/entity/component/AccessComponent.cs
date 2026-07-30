@@ -11,6 +11,11 @@ public class AccessComponent : EntityComponent<PlayerEntity>
     public PlayerEntity entity { get; }
     public HashSet<CrimeType> activeCrimes = new();
 
+    public AccessComponent(PlayerEntity entity)
+    {
+        this.entity = entity;
+    }
+
     public void onEnterZone(Zone zone)
     {
         if (!zone.isAuthorized(this.entity))
