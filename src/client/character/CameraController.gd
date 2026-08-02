@@ -89,8 +89,8 @@ func _change_zoom_state(new_state: float) -> void:
 func _process(delta: float) -> void:
 	_handle_input_actions()
 
-	if hold_lean and target_side != 0.0:
-		target_side = target_side if (key_held_lean_left or key_held_lean_right) else 0.0
+	# if hold_lean and target_side != 0.0:
+	#	target_side = target_side if (key_held_lean_left or key_held_lean_right) else 0.0
 
 	current_zoom = lerp(current_zoom, zoom_state, delta / zoom_lerp_speed)
 	current_side = lerp(current_side, target_side, delta / tween_speed)
@@ -142,23 +142,25 @@ func _process(delta: float) -> void:
 	camera.transform = final_offset
 
 func _handle_input_actions() -> void:
+	key_held_lean_left = Input.is_action_pressed("lean_left")
+	key_held_lean_right = Input.is_action_pressed("lean_right")
+
 	if Input.is_action_just_pressed("lean_left"):
 		target_side = -1.0
 		default_target_side = -1.0
-		key_held_lean_left = true
-	elif Input.is_action_just_released("lean_left"):
-		key_held_lean_left = false
-		if hold_lean and target_side != 1.0:
-			target_side = default_target_side
-
-	if Input.is_action_just_pressed("lean_right"):
+	elif Input.is_action_just_pressed("lean_right"):
 		target_side = 1.0
 		default_target_side = 1.0
-		key_held_lean_right = true
-	elif Input.is_action_just_released("lean_right"):
-		key_held_lean_right = false
-		if hold_lean and target_side != -1.0:
-			target_side = default_target_side
+
+	if key_held_lean_left and not key_held_lean_right:
+		target_side = -1.0
+		default_target_side = -1.0
+	elif key_held_lean_right and not key_held_lean_left:
+		target_side = 1.0
+		default_target_side = 1.0
+	elif not key_held_lean_left and not key_held_lean_right:
+		if hold_lean:
+			target_side = 0.0
 
 	if Input.is_action_just_pressed("zoom_aim"):
 		target_fov = default_fov * zoomed_fov_percent
