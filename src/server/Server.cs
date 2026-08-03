@@ -107,19 +107,26 @@ public partial class Server : Node
 
         GD.Print($"Adding player {id}");
 
+        var playersScene = GetNode("Players");
+
         // To decouple the player CONNECTION instance and the player CHARACTER (entity),
         // `player_instance` will represent the connection and `player` is the actual character entity which exists
         // in the world.
-        PackedScene playerScene = GD.Load<PackedScene>("res://scenes/player_instance.tscn");
-        var player = (Player)playerScene.Instantiate();
+        // PackedScene playerScene = GD.Load<PackedScene>("res://scenes/player_instance.tscn");
+        // var player = (Player)playerScene.Instantiate();
 
         PackedScene characterScene = GD.Load<PackedScene>("res://scenes/player.tscn");
         var character = (PlayerEntity)characterScene.Instantiate();
 
-        player.peerId = id;
-        player.name = id.ToString(); // for now
+        // player.peerId = id;
+        // player.name = id.ToString(); // for now
         character.Name = id.ToString(); // to get the peer_id
-        GetNode("Players").AddChild(character, true);
+        playersScene.AddChild(character, true);
+
+        // Randomize character position
+        const float spawnRandom = (float)5.0;
+        Vector2 pos = Vector2.FromAngle(GD.Randf() * 2 * Single.Pi);
+        character.Position = new Vector3(pos.X * spawnRandom * GD.Randf(), 3, pos.Y * spawnRandom);
 
         // Add it to the actual Scene
         character.uuid = id.ToString();

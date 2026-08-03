@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://d02cf4qqdn2vn" path="res://src/client/ui/EscapeMenu.gd" id="2_tpfpu"]
 [ext_resource type="Script" uid="uid://b7ogjbt3mhst4" path="res://src/shared/util/DebugDraw.cs" id="3_ybs1l"]
 
-[node name="Startup" type="Node" unique_id=1580243688]
+[node name="Machine" type="Node" unique_id=1580243688]
 script = ExtResource("1_t87yh")
 
 [node name="EscapeMenu" type="Node" parent="." unique_id=702721892]
