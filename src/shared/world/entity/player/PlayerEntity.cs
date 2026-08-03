@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Asymptote.Shared.World.Entity.Component;
+using Asymptote.Shared.World.Entity.Component.Inventory;
 using Asymptote.Shared.World.Level.Scene;
 using Godot;
 
@@ -44,9 +45,9 @@ public partial class PlayerEntity : CharacterBody3D, IEntity
         return character.GlobalPosition;
     }
 
-    public void setScene(Scene scene)
+    public void setScene(Scene givenScene)
     {
-        this.scene = scene;
+        this.scene = givenScene;
     }
 
     public bool isInScene()
@@ -98,7 +99,7 @@ public partial class PlayerEntity : CharacterBody3D, IEntity
         }
     }
 
-    private void _ExitTree()
+    public override void _ExitTree()
     {
         onRemovedFromWorld?.Invoke(this);
     }
