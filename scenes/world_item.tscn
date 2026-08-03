@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://b1013i3c4hd7j"]
+
+[ext_resource type="Script" uid="uid://cfdrrsqeied8c" path="res://src/shared/world/inventory/WorldItem.cs" id="1_8r7n1"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_k7chi"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_eoy2r"]
+
+[node name="WorldItem" type="RigidBody3D" unique_id=1821505386]
+script = ExtResource("1_8r7n1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1096618981]
+mesh = SubResource("BoxMesh_k7chi")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=386132973]
+shape = SubResource("BoxShape3D_eoy2r")

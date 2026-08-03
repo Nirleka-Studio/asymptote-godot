@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://cok4r5m1vpuny" path="res://test/prompt/ui_prompt.gd" id="2_w7c3h"]
 [ext_resource type="FontFile" uid="uid://6b3oapugoud7" path="res://assets/fonts/Zekton-Regular.otf" id="3_w8frs"]
 [ext_resource type="Script" uid="uid://cxotx2a6rv136" path="res://src/shared/world/entity/npc/NpcSpawner.cs" id="4_mx8sn"]
+[ext_resource type="Script" uid="uid://5u6fmrecay2j" path="res://src/shared/world/inventory/ItemSpawner.cs" id="6_2r41h"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_mx8sn"]
 size = Vector3(36.632263, 17.762695, 32.302277)
@@ -93,3 +94,9 @@ omni_range = 55.8
 [node name="Npc" type="Node3D" parent="NavigationRegion3D/Map/Entities" unique_id=170323388]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.3348665, 0)
 script = ExtResource("4_mx8sn")
+
+[node name="Items" type="MultiplayerSpawner" parent="." unique_id=581269112]
+spawn_path = NodePath("ItemSpawner")
+
+[node name="ItemSpawner" type="Node3D" parent="Items" unique_id=1271920461]
+script = ExtResource("6_2r41h")

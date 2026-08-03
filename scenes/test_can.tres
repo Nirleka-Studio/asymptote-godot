@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="InventoryDefinition" format=3 uid="uid://c4dsii3pw0eks"]
+
+[ext_resource type="Script" uid="uid://bctdvje8dv4l7" path="res://src/shared/world/inventory/InventoryDefinition.cs" id="1_qyqjp"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_qyqjp"]
+
+[resource]
+script = ExtResource("1_qyqjp")
+id = "0"
+displayName = "Can"
+subtitle = "A fucking can. What else do you want?"
+icon = SubResource("PlaceholderTexture2D_qyqjp")
+weightInGrams = 10
+behaviors = Array[Object]([])
+metadata/_custom_type_script = "uid://bctdvje8dv4l7"

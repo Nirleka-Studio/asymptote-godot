@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://cguq6n3khr3i3"]
+
+[ext_resource type="Script" uid="uid://c81pegoosxpuu" path="res://src/client/ui/inventory/InventoryScreen.cs" id="1_wuqch"]
+[ext_resource type="Script" uid="uid://cg8atq3t3actm" path="res://src/client/ui/inventory/InventoryGridUI.cs" id="2_8g3s5"]
+
+[node name="InventoryScene" type="CanvasLayer" unique_id=228203643]
+script = ExtResource("1_wuqch")
+
+[node name="Root" type="Control" parent="." unique_id=304466598]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Backdrop" type="Panel" parent="Root" unique_id=803143468]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="Root/Backdrop" unique_id=401314068]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Sections" type="VBoxContainer" parent="Root/Backdrop/Margin" unique_id=1601735716]
+layout_mode = 2
+
+[node name="MainLabel" type="Label" parent="Root/Backdrop/Margin/Sections" unique_id=1800417631]
+layout_mode = 2
+text = "MAIN"
+
+[node name="MainGrid" type="Label" parent="Root/Backdrop/Margin/Sections" unique_id=426137907]
+layout_mode = 2
+script = ExtResource("2_8g3s5")
+
+[node name="BackpackLabel" type="Label" parent="Root/Backdrop/Margin/Sections" unique_id=776923622]
+layout_mode = 2
+text = "BACKPACK"
+
+[node name="BackpackGrid" type="Label" parent="Root/Backdrop/Margin/Sections" unique_id=606597983]
+layout_mode = 2
+script = ExtResource("2_8g3s5")
