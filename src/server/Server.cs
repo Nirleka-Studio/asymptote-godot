@@ -121,12 +121,13 @@ public partial class Server : Node
         // player.peerId = id;
         // player.name = id.ToString(); // for now
         character.Name = id.ToString(); // to get the peer_id
-        playersScene.AddChild(character, true);
 
         // Randomize character position
         const float spawnRandom = (float)5.0;
         Vector2 pos = Vector2.FromAngle(GD.Randf() * 2 * Single.Pi);
         character.Position = new Vector3(pos.X * spawnRandom * GD.Randf(), 3, pos.Y * spawnRandom);
+
+        playersScene.AddChild(character, true);
 
         // Add it to the actual Scene
         character.uuid = id.ToString();

@@ -23,6 +23,7 @@ func _enter_tree() -> void:
 			child.set_multiplayer_authority(peer_id)
 
 func _ready() -> void:
+	print("My multiplayer authority is:", get_multiplayer_authority())
 	var is_mine: bool = get_multiplayer_authority() == multiplayer.get_unique_id()
 	set_process(is_mine)
 

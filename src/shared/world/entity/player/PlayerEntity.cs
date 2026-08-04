@@ -100,6 +100,17 @@ public partial class PlayerEntity : CharacterBody3D, IEntity
         }
     }
 
+    public override void _EnterTree()
+    {
+        base._EnterTree();
+
+        if (int.TryParse(Name, out int id))
+        {
+            SetMultiplayerAuthority(id, true);
+            GD.Print(GetMultiplayerAuthority());
+        }
+    }
+
     public override void _ExitTree()
     {
         onRemovedFromWorld?.Invoke(this);
