@@ -11,7 +11,19 @@ public partial class PlayerEntity : CharacterBody3D, IEntity
 {
     private Scene scene { get; set; }
 
-    public Vector3 position { get; set; }
+    // public Vector3 position { get; set; }
+    // let me not delete this to tell you a fucking story.
+    // for fucking days ive been debugging and trying to fucking figure out
+    // ripping my fucking hairs off
+    // on why the players position are not synchronizing.
+    // turns fucking out c# scripts can also override Godot Node properties
+    // wtf?
+    // I left out position without thinking about it
+    // and no fucking editor ever tells me its shadowing the Godot's position property
+    // what is this shit
+    // fucking bullshit
+    // now I can fuck off and move on with the inventory.
+
     public string uuid { get; set; }
     public int instId { get; set; }
     public event Action<IEntity> onPositionChanged;
