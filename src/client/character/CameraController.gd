@@ -72,14 +72,16 @@ func set_offset_this_frame(key: String, priority: int, offset: Transform3D) -> v
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		rot_x -= deg_to_rad(event.relative.y * 0.3)
-		rot_y -= deg_to_rad(event.relative.x * 0.3)
+		var event_mouse := event as InputEventMouseMotion
+		rot_x -= deg_to_rad(event_mouse.relative.y * 0.3)
+		rot_y -= deg_to_rad(event_mouse.relative.x * 0.3)
 		rot_x = clamp(rot_x, deg_to_rad(-80), deg_to_rad(80))
 
 	elif event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
+		var event_mouse := event as InputEventMouseButton
+		if event_mouse.button_index == MOUSE_BUTTON_WHEEL_UP and event_mouse.pressed:
 			_change_zoom_state(0.0)  # first Person
-		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
+		elif event_mouse.button_index == MOUSE_BUTTON_WHEEL_DOWN and event_mouse.pressed:
 			_change_zoom_state(1.0) # third Person
 
 func _change_zoom_state(new_state: float) -> void:
