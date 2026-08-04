@@ -42,8 +42,8 @@ public partial class PlayerEntity : CharacterBody3D, IEntity
             // HACK: ffs we are setting the key as the class PlayerDetectableEntityComponent is extending to.
             // Oh well.
             [typeof(DetectableEntityComponent)] = new PlayerDetectableEntityComponent(this),
-            [typeof(AccessComponent)] = new AccessComponent(this) //,
-            // [typeof(InventoryComponent)] = new InventoryComponent(this)
+            [typeof(AccessComponent)] = new AccessComponent(this),
+            [typeof(InventoryComponent)] = new InventoryComponent(this)
         };
         character.TreeExited += _ExitTree;
     }

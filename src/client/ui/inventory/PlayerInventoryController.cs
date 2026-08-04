@@ -1,5 +1,3 @@
-using Asymptote.Client.UI.Inventory;
-using Asymptote.Shared.World.Entity.Component;
 using Asymptote.Shared.World.Entity.Component.Inventory;
 using Asymptote.Shared.World.Entity.Player;
 using Godot;
@@ -53,6 +51,5 @@ public partial class PlayerInventoryController : Node
 
     private void tryPickup()
     {
-        
     }
 }

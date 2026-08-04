@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://b1u60ncp52vgt" path="res://src/client/character/CharacterController.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://c7ohf44ip775i" path="res://src/shared/world/entity/player/PlayerEntity.cs" id="1_g2els"]
 [ext_resource type="Script" uid="uid://cxx7f1y63lnwo" path="res://src/client/character/CameraController.gd" id="2_g2els"]
+[ext_resource type="Script" uid="uid://d2cmmp6evicmc" path="res://src/client/ui/inventory/PlayerInventoryController.cs" id="4_dqkch"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sh265"]
 
@@ -40,3 +41,6 @@ replication_config = SubResource("SceneReplicationConfig_qhqgy")
 
 [node name="CharacterController" type="Node3D" parent="." unique_id=718993067]
 script = ExtResource("1_3vyb7")
+
+[node name="PlayerInventoryController" type="Node" parent="." unique_id=1435440782]
+script = ExtResource("4_dqkch")
