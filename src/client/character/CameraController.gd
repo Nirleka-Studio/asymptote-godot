@@ -44,8 +44,7 @@ var camera_offsets: Dictionary = {}
 
 func _ready() -> void:
 	# This is utterly fucking retarded.
-	print("My multiplayer authority is:", get_multiplayer_authority())
-	var is_mine: bool = player.name.to_int() == multiplayer.get_unique_id()
+	var is_mine: bool = get_multiplayer_authority() == multiplayer.get_unique_id()
 	set_process(is_mine)
 
 	var cam: Camera3D = find_child("Camera3D", true, false)
