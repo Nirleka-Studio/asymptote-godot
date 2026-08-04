@@ -35,11 +35,23 @@ public interface IEntity
 
     Godot.Vector3 getPosition();
 
+    void setPosition(Vector3 position)
+    {
+    }
+
+    void setRotation(Vector3 rotation)
+    {
+    }
+
     Godot.Rid getRid();
 
     void setScene(Scene scene);
 
     bool isInScene();
+
+    void initialize(Scene scene)
+    {
+    }
 
     #region Components
 

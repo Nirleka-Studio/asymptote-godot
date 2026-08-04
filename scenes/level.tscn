@@ -83,6 +83,7 @@ omni_range = 55.8
 [node name="Entities" type="Node3D" parent="NavigationRegion3D/Map" unique_id=1753681152]
 
 [node name="Items" type="MultiplayerSpawner" parent="." unique_id=581269112]
+_spawnable_scenes = PackedStringArray("uid://b1013i3c4hd7j")
 spawn_path = NodePath("ItemSpawner")
 
 [node name="ItemSpawner" type="Node3D" parent="Items" unique_id=1271920461]

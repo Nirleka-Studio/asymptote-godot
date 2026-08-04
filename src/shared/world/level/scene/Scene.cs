@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using Asymptote.Shared.World.Entity;
 using Asymptote.Shared.World.Level.Entity;
@@ -15,6 +17,7 @@ public class Scene
     // needs to sit under the level's MultiplayerSpawner watched path so
     // dropped items replicate to clients.
     public Node3D itemSpawnRoot { get; set; }
+    public Node3D entitiesNode { get; set; }
 
     public Scene()
     {
@@ -33,7 +36,30 @@ public class Scene
         return this.entityManager.getEntityByUuid(uuid);
     }
 
-    public WorldItem spawnItem(ItemStack stack, Vector3 position)
+    public IEntity? spawnEntity(string scenePath, Vector3 position, Vector3? rotation = null)
+    {
+        PackedScene entityScene = GD.Load<PackedScene>(scenePath);
+        if (entityScene == null)
+        {
+            GD.PushError($"Failure to spawn entity from path '{scenePath}'; possible invalid path");
+            return null;
+        }
+
+        IEntity character = (IEntity)entityScene.Instantiate();
+        character.initialize(this);
+        character.setPosition(position);
+        if (rotation != null)
+        {
+            character.setRotation(rotation.Value);
+        }
+
+        character.setScene(this);
+        this.entityManager.addEntity(character);
+
+        return character;
+    }
+
+    public WorldItem? spawnItem(ItemStack stack, Vector3 position)
     {
         if (itemSpawnRoot == null)
         {
@@ -50,7 +76,7 @@ public class Scene
         PackedScene worldItemScene = GD.Load<PackedScene>("res://scenes/world_item.tscn");
         WorldItem item = worldItemScene.Instantiate<WorldItem>();
 
-        itemSpawnRoot.AddChild(item);
+        itemSpawnRoot.AddChild(item, true);
         item.GlobalPosition = position;
         item.setStack(stack);
         item.setScene(this);
@@ -66,12 +92,17 @@ public class Scene
 
         // FOR NOW
 
-        if (false)
+        if (true)
         {
             if (new Random().NextDouble() < 0.1)
             {
+                const float spawnRandom = (float)5.0;
+                Vector2 pos = Vector2.FromAngle(GD.Randf() * 2 * Single.Pi);
+                Vector3 finalPos = new Vector3(pos.X * spawnRandom * GD.Randf(), 3, pos.Y * spawnRandom);
+
                 var definition = GD.Load<InventoryDefinition>("res://scenes/test_can.tres");
                 this.spawnItem(new ItemStack(definition), new Vector3(0, 10, 0));
+                this.spawnEntity("res://scenes/npc.tscn", finalPos);
             }
         }
     }

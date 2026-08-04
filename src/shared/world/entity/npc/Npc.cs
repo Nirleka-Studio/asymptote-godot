@@ -17,7 +17,7 @@ public partial class Npc : CharacterBody3D, IEntity
     public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
     private Scene scene { get; set; }
 
-    public Vector3 position { get; set; }
+    public Vector3 lastPosition { get; set; }
     public string uuid { get; set; }
     public int instId { get; set; }
     public event Action<IEntity> onPositionChanged;
@@ -57,6 +57,16 @@ public partial class Npc : CharacterBody3D, IEntity
     public Vector3 getPosition()
     {
         return GlobalPosition;
+    }
+
+    public void setPosition(Vector3 position)
+    {
+        this.GlobalPosition = position;
+    }
+
+    public void setRotation(Vector3 rotation)
+    {
+        this.GlobalRotation = rotation;
     }
 
     public void setScene(Scene scene)
@@ -155,9 +165,9 @@ public partial class Npc : CharacterBody3D, IEntity
 
         MoveAndSlide();
 
-        if (!Position.IsEqualApprox(position))
+        if (!Position.IsEqualApprox(lastPosition))
         {
-            position = Position;
+            lastPosition = Position;
             onPositionChanged?.Invoke(this);
         }
     }
@@ -261,5 +271,10 @@ public partial class Npc : CharacterBody3D, IEntity
     public Rid getRid()
     {
         return GetRid();
+    }
+
+    public void initialize(Scene givenScene)
+    {
+        givenScene.entitiesNode.AddChild(this, true);
     }
 }
