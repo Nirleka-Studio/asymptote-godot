@@ -10,6 +10,8 @@ public partial class InfiniteJazzEngine : Node
     private AudioStreamPlayer audioPlayer;
     private AudioStreamGeneratorPlayback playback;
 
+    private bool isMuted = false; // Mute state flag
+
     private const float SampleRate = 44100.0f;
     private double bpm = 230; // 220.0 seems fine
     private double sampleTime = 0.0;
@@ -127,6 +129,15 @@ public partial class InfiniteJazzEngine : Node
         playback = audioPlayer.GetStreamPlayback() as AudioStreamGeneratorPlayback;
     }
 
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        if (@event is InputEventKey keyEvent && keyEvent.Pressed && !keyEvent.Echo && keyEvent.Keycode == Key.M)
+        {
+            isMuted = !isMuted;
+            GetTree().Root.SetInputAsHandled();
+        }
+    }
+
     public override void _Process(double delta)
     {
         if (playback == null) return;
@@ -143,7 +154,8 @@ public partial class InfiniteJazzEngine : Node
                 OnSubdivisionTick();
             }
 
-            Vector2 stereoFrame = SynthesizeStereoFrame();
+            // Output silence while muted, preserving synthesis timing in background
+            Vector2 stereoFrame = isMuted ? Vector2.Zero : SynthesizeStereoFrame();
             playback.PushFrame(stereoFrame);
         }
     }
