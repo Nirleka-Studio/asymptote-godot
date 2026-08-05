@@ -53,6 +53,22 @@ public interface IEntity
     {
     }
 
+    #region Life
+
+    void dicard()
+    {
+        this.remove(RemovalReason.DISCARDED);
+    }
+
+    void remove(RemovalReason reason)
+    {
+        this.setRemoved(reason);
+    }
+
+    void setRemoved(RemovalReason reason);
+
+    #endregion
+
     #region Components
 
     bool hasComponent<T>() where T : IEntityComponent
@@ -66,4 +82,12 @@ public interface IEntity
     }
 
     #endregion
+
+    public enum RemovalReason
+    {
+        KILLED,
+        DISCARDED,
+        EXIT_TREE,
+        BELOW_WORLD
+    }
 }

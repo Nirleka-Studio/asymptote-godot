@@ -28,6 +28,8 @@ public partial class Npc : CharacterBody3D, IEntity
     private Brain<Npc> brain;
     private DetectionManager detectionManager;
 
+    private IEntity.RemovalReason? removalReason;
+
     public Npc()
     {
         this.detectionManager = new(this);
@@ -137,6 +139,11 @@ public partial class Npc : CharacterBody3D, IEntity
         }
 
         #endregion
+
+        if (this.getPosition().Y < this.scene.minY)
+        {
+            ((IEntity)this).remove(IEntity.RemovalReason.BELOW_WORLD);
+        }
     }
 
     public override void _PhysicsProcess(double delta)
@@ -277,4 +284,33 @@ public partial class Npc : CharacterBody3D, IEntity
     {
         givenScene.entitiesNode.AddChild(this, true);
     }
+
+    #region Life
+
+    public void setRemoved(IEntity.RemovalReason reason)
+    {
+        if (this.removalReason == null)
+        {
+            this.removalReason = reason;
+        }
+
+        onRemovedFromWorld?.Invoke(this);
+        this.onRemoval(reason);
+    }
+
+    private void onRemoval(IEntity.RemovalReason reason)
+    {
+        if (reason != IEntity.RemovalReason.EXIT_TREE)
+        {
+            this.QueueFree();
+        }
+    }
+
+    public override void _ExitTree()
+    {
+        base._ExitTree();
+        ((IEntity)this).remove(IEntity.RemovalReason.EXIT_TREE);
+    }
+
+    #endregion
 }

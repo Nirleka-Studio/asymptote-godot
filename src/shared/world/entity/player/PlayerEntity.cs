@@ -34,6 +34,8 @@ public partial class PlayerEntity : CharacterBody3D, IEntity
 
     private Dictionary<Type, IEntityComponent> components;
 
+    private IEntity.RemovalReason? removalReason;
+
     public PlayerEntity()
     {
         this.character = this;
@@ -110,6 +112,11 @@ public partial class PlayerEntity : CharacterBody3D, IEntity
             lastPosition = currentPos;
             onPositionChanged?.Invoke(this);
         }
+
+        if (this.getPosition().Y < this.scene.minY)
+        {
+            this.SetPosition(new Vector3(0, 10, 0)); // Maybe don't banish them to the shadow realm yet
+        }
     }
 
     public override void _EnterTree()
@@ -123,10 +130,34 @@ public partial class PlayerEntity : CharacterBody3D, IEntity
         }
     }
 
+    #region Life
+
+    public void setRemoved(IEntity.RemovalReason reason)
+    {
+        if (this.removalReason == null)
+        {
+            this.removalReason = reason;
+        }
+
+        onRemovedFromWorld?.Invoke(this);
+        this.onRemoval(reason);
+    }
+
+    private void onRemoval(IEntity.RemovalReason reason)
+    {
+        if (reason != IEntity.RemovalReason.EXIT_TREE)
+        {
+            this.QueueFree();
+        }
+    }
+
     public override void _ExitTree()
     {
-        onRemovedFromWorld?.Invoke(this);
+        base._ExitTree();
+        ((IEntity)this).remove(IEntity.RemovalReason.EXIT_TREE);
     }
+
+    #endregion
 
     #endregion
 }

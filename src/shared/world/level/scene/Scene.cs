@@ -19,6 +19,12 @@ public class Scene
     public Node3D itemSpawnRoot { get; set; }
     public Node3D entitiesNode { get; set; }
 
+    #region Level Attributes
+
+    public float minY = -64; // TODO: Later on, this is changed dynamically based on total level bounds
+
+    #endregion
+
     public Scene()
     {
         this.entityTickList = new EntityTickList();

@@ -25,6 +25,8 @@ public partial class WorldItem : RigidBody3D, IEntity
     public event Action<IEntity> onPositionChanged;
     public event Action<IEntity> onRemovedFromWorld;
 
+    private IEntity.RemovalReason? removalReason;
+
     public string getUuid() => uuid;
 
     public Vector3 getPosition() => GlobalPosition;
@@ -43,6 +45,10 @@ public partial class WorldItem : RigidBody3D, IEntity
 
     public void update(double deltaTime, double currentTime)
     {
+        if (this.getPosition().Y < this.scene.minY)
+        {
+            ((IEntity)this).remove(IEntity.RemovalReason.BELOW_WORLD);
+        }
     }
 
     public void setStack(ItemStack givenStack)
@@ -54,11 +60,6 @@ public partial class WorldItem : RigidBody3D, IEntity
     public override void _Ready()
     {
         refreshVisual();
-    }
-
-    public override void _ExitTree()
-    {
-        onRemovedFromWorld?.Invoke(this);
     }
 
     public override void _PhysicsProcess(double delta)
@@ -108,4 +109,33 @@ public partial class WorldItem : RigidBody3D, IEntity
         QueueFree();
         return true;
     }
+
+    #region Life
+
+    public void setRemoved(IEntity.RemovalReason reason)
+    {
+        if (this.removalReason == null)
+        {
+            this.removalReason = reason;
+        }
+
+        onRemovedFromWorld?.Invoke(this);
+        this.onRemoval(reason);
+    }
+
+    private void onRemoval(IEntity.RemovalReason reason)
+    {
+        if (reason != IEntity.RemovalReason.EXIT_TREE)
+        {
+            this.QueueFree();
+        }
+    }
+
+    public override void _ExitTree()
+    {
+        base._ExitTree();
+        ((IEntity)this).remove(IEntity.RemovalReason.EXIT_TREE);
+    }
+
+    #endregion
 }
