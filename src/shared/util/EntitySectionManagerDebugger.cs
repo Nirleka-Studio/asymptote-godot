@@ -9,7 +9,7 @@ public partial class EntitySectionDebugRenderer : MeshInstance3D
     private EntitySectionManager _manager;
     private OrmMaterial3D _material;
 
-    [Export] public bool enabled = true;
+    [Export] public bool enabled = false;
 
     [Export] public Color SectionBoxColor { get; set; } = new(0, 1, 0, 0.4f); // Green wireframe
     [Export] public Color EntityMarkerColor { get; set; } = new(1, 0, 0, 1.0f); // Red dots/lines
