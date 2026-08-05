@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://gb8q1upwqqwc" path="res://src/server/Server.cs" id="1_mx8sn"]
 [ext_resource type="Script" uid="uid://cyyxw52sre1bd" path="res://src/shared/world/level/zone/Zone.cs" id="2_ppgk2"]
+[ext_resource type="Script" uid="uid://o4t8fdq4k0av" path="res://src/shared/misc/InfiniteJazzEngine.cs" id="4_mx8sn"]
 [ext_resource type="Script" uid="uid://5u6fmrecay2j" path="res://src/shared/world/inventory/ItemSpawner.cs" id="6_2r41h"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_mx8sn"]
@@ -88,3 +89,6 @@ spawn_path = NodePath("ItemSpawner")
 
 [node name="ItemSpawner" type="Node3D" parent="Items" unique_id=1271920461]
 script = ExtResource("6_2r41h")
+
+[node name="Jazzer" type="Node3D" parent="." unique_id=179153816]
+script = ExtResource("4_mx8sn")

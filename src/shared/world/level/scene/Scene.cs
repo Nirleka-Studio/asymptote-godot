@@ -4,6 +4,7 @@ using System;
 using Asymptote.Shared.World.Entity;
 using Asymptote.Shared.World.Level.Entity;
 using Asymptote.Shared.World.Inventory;
+using Asymptote.Util;
 using Godot;
 
 namespace Asymptote.Shared.World.Level.Scene;
@@ -92,6 +93,47 @@ public class Scene
         return item;
     }
 
+    public void createExplosion(Vector3 epicenter, float radius = 10.0f, float force = 25.0f, float upwardBias = 0.35f)
+    {
+        float radiusSquared = radius * radius;
+
+        foreach (IEntity entity in this.entityManager.getEntitiesInRange(epicenter, 0, radius))
+        {
+            Vector3 entityPos = entity.getPosition();
+            float distSquared = epicenter.DistanceSquaredTo(entityPos);
+
+            float distance = Mathf.Sqrt(distSquared);
+
+            Vector3 pushDirection = (entityPos - epicenter) / distance;
+
+            pushDirection.Y += upwardBias;
+            pushDirection = pushDirection.Normalized();
+
+            float attenuation = 1.0f - (distance / radius);
+            attenuation *= attenuation;
+
+            Vector3 impulse = pushDirection * force * attenuation;
+
+            if (entity is RigidBody3D rigidBody)
+            {
+                rigidBody.ApplyImpulse(impulse);
+            }
+
+            else if (entity is CharacterBody3D characterBody)
+            {
+                characterBody.Velocity += impulse;
+            }
+            else if (entity is Node3D nodeEntity)
+            {
+                var rb = nodeEntity.GetNodeOrNull<RigidBody3D>(".");
+                if (rb != null)
+                {
+                    rb.ApplyImpulse(impulse);
+                }
+            }
+        }
+    }
+
     internal void update(double deltaTime, double currentTime)
     {
         this.entityTickList.forEach((entity => entity.update(deltaTime, currentTime)));
@@ -100,15 +142,22 @@ public class Scene
 
         if (true)
         {
-            if (new Random().NextDouble() < 0.1)
+            if (new Random().NextDouble() < 0.15)
             {
-                const float spawnRandom = (float)5.0;
+                const float spawnRandom = (float)30;
                 Vector2 pos = Vector2.FromAngle(GD.Randf() * 2 * Single.Pi);
                 Vector3 finalPos = new Vector3(pos.X * spawnRandom * GD.Randf(), 3, pos.Y * spawnRandom);
-
                 var definition = GD.Load<InventoryDefinition>("res://scenes/test_can.tres");
                 this.spawnItem(new ItemStack(definition), new Vector3(0, 10, 0));
-                this.spawnEntity("res://scenes/npc.tscn", finalPos);
+
+                if (new Random().NextDouble() < 0.2)
+                {
+                    this.spawnEntity("res://scenes/npc.tscn", finalPos);
+                    this.createExplosion(finalPos, 20.0f, 15.0f);
+                    var finalExplosionPos = new Vector3(finalPos.X, finalPos.Y - 1.5f, finalPos.Z);
+                    this.createExplosion(finalExplosionPos, 20.0f, 15.0f);
+                    this.createExplosion(new Vector3(0, 2, 0), 20.0f, 15.0f);
+                }
             }
         }
     }
