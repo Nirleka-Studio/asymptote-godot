@@ -79,7 +79,7 @@ public partial class Server : Node
             this.onPlayerJoined(1); // Won't this certainly lead to persistence error?
         }
 
-        this.scene.entitiesNode = GetNode<Node3D>("NavigationRegion3D/Map/Entities");
+        this.scene.entitiesNode = GetNode<Node3D>("Entities");
     }
 
     public override void _ExitTree()

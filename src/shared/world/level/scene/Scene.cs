@@ -140,7 +140,7 @@ public class Scene
 
         // FOR NOW
 
-        if (true)
+        if (false)
         {
             if (new Random().NextDouble() < 0.15)
             {

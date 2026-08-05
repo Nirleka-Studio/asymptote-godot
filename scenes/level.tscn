@@ -1,87 +1,21 @@
 [gd_scene format=3 uid="uid://cyhae2muwf70a"]
 
 [ext_resource type="Script" uid="uid://gb8q1upwqqwc" path="res://src/server/Server.cs" id="1_mx8sn"]
-[ext_resource type="Script" uid="uid://cyyxw52sre1bd" path="res://src/shared/world/level/zone/Zone.cs" id="2_ppgk2"]
 [ext_resource type="Script" uid="uid://o4t8fdq4k0av" path="res://src/shared/misc/InfiniteJazzEngine.cs" id="4_mx8sn"]
+[ext_resource type="PackedScene" uid="uid://b8o52708i6u06" path="res://scenes/levels/liminal_space.tscn" id="4_ppgk2"]
 [ext_resource type="Script" uid="uid://5u6fmrecay2j" path="res://src/shared/world/inventory/ItemSpawner.cs" id="6_2r41h"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_mx8sn"]
-size = Vector3(36.632263, 17.762695, 32.302277)
-
-[sub_resource type="NavigationMesh" id="NavigationMesh_mx8sn"]
-vertices = PackedVector3Array(-6.468828, 6.838791, 3.3399558, -4.468828, 6.838791, 3.3399558, -4.218828, 6.838791, 1.3399558, -6.468828, 6.838791, -3.4100442, -1.9688282, 6.838791, 1.3399558, 6.531172, 6.838791, 3.3399558, 6.531172, 6.838791, -3.4100442, -1.7188282, 6.838791, 3.3399558)
-polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Array(5, 4, 6), PackedInt32Array(6, 4, 3), PackedInt32Array(4, 2, 3), PackedInt32Array(5, 7, 4)]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2r41h"]
-albedo_color = Color(0, 0, 1, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_w7c3h"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ppgk2"]
-albedo_color = Color(0, 0, 1, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_2q6dc"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2q6dc"]
 
 [node name="World" type="Node3D" unique_id=1099873012]
 script = ExtResource("1_mx8sn")
 
 [node name="Players" type="Node3D" parent="." unique_id=378380871]
 
-[node name="Zones" type="Node3D" parent="." unique_id=1160003647]
-
-[node name="Zone" type="Area3D" parent="Zones" unique_id=1177143884]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8169918, 0, -11.869019)
-script = ExtResource("2_ppgk2")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Zones/Zone" unique_id=1127502186]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.816132, 8.381348, 1.946579)
-shape = SubResource("BoxShape3D_mx8sn")
+[node name="Entities" type="Node3D" parent="." unique_id=540043239]
 
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=969502010]
 _spawnable_scenes = PackedStringArray("uid://vuhh772oec5y")
 spawn_path = NodePath("../Players")
 spawn_limit = 4
-
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=2070290154]
-transform = Transform3D(4.955844, 0, 0, 0, 0.07592368, 0, 0, 0, 7.994562, 0, 0, 0)
-navigation_mesh = SubResource("NavigationMesh_mx8sn")
-
-[node name="Map" type="Node3D" parent="NavigationRegion3D" unique_id=1268467694]
-transform = Transform3D(0.20178199, 0, 0, 0, 13.171121, 0, 0, 0, 0.12508503, 0, 0, 0)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/Map" unique_id=1912425699]
-transform = Transform3D(69.072845, 0, 0, 0, 1, 0, 0, 0, 62.51818, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_2r41h")
-mesh = SubResource("BoxMesh_w7c3h")
-surface_material_override/0 = SubResource("StandardMaterial3D_ppgk2")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Map/MeshInstance3D" unique_id=2100479162]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Map/MeshInstance3D/StaticBody3D" unique_id=139099991]
-shape = SubResource("BoxShape3D_2q6dc")
-debug_color = Color(3.85046e-07, 0.60027474, 0.7003808, 0.41960785)
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="NavigationRegion3D/Map" unique_id=1989919765]
-transform = Transform3D(7.7281346, 0, 0, 0, 18.600191, 0, 0, 0, 7.998319, -15.306732, 7.237916, 18.724905)
-material_override = SubResource("StandardMaterial3D_2q6dc")
-mesh = SubResource("BoxMesh_w7c3h")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Map/MeshInstance3D2" unique_id=1970613165]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Map/MeshInstance3D2/StaticBody3D" unique_id=158175030]
-shape = SubResource("BoxShape3D_2q6dc")
-debug_color = Color(3.85046e-07, 0.60027474, 0.7003808, 0.41960785)
-
-[node name="OmniLight3D" type="OmniLight3D" parent="NavigationRegion3D/Map" unique_id=2065141232]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.170975, 0)
-light_energy = 1.942
-light_size = 0.098
-shadow_enabled = true
-omni_range = 55.8
-
-[node name="Entities" type="Node3D" parent="NavigationRegion3D/Map" unique_id=1753681152]
 
 [node name="Items" type="MultiplayerSpawner" parent="." unique_id=581269112]
 _spawnable_scenes = PackedStringArray("uid://b1013i3c4hd7j")
@@ -92,3 +26,7 @@ script = ExtResource("6_2r41h")
 
 [node name="Jazzer" type="Node3D" parent="." unique_id=179153816]
 script = ExtResource("4_mx8sn")
+
+[node name="Map" type="Node3D" parent="." unique_id=1500555434]
+
+[node name="LiminalSpace" parent="Map" unique_id=1229703305 instance=ExtResource("4_ppgk2")]

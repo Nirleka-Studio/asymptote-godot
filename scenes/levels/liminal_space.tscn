@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://b8o52708i6u06"]
+
+[ext_resource type="PackedScene" uid="uid://b33uo5t3wswps" path="res://assets/models/interiors/liminal/scene/Scene.gltf" id="1_v3yha"]
+[ext_resource type="LightmapGIData" uid="uid://b6g66kv7srbnl" path="res://assets/textures/liminal_space.lmbake" id="2_swdfn"]
+
+[sub_resource type="Environment" id="Environment_jltir"]
+glow_enabled = true
+glow_intensity = 0.23
+glow_strength = 1.03
+glow_bloom = 1.0
+glow_hdr_threshold = 4.0
+glow_hdr_scale = 1.14
+fog_enabled = true
+fog_light_color = Color(0.12773365, 0.54269254, 0.99999994, 1)
+fog_light_energy = 1.29
+fog_density = 0.0032
+
+[node name="LiminalSpace" type="Node3D" unique_id=1229703305]
+
+[node name="Scene2" parent="." unique_id=1290632041 instance=ExtResource("1_v3yha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 6)
+
+[node name="LightmapGI" type="LightmapGI" parent="." unique_id=457506112]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4625084, -0.99441844)
+quality = 3
+bounces = 10
+denoiser_strength = 0.2
+texel_scale = 8.0
+light_data = ExtResource("2_swdfn")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1473789515]
+environment = SubResource("Environment_jltir")
+
+[editable path="Scene2"]
