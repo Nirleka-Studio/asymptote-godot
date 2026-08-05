@@ -9,6 +9,8 @@ public partial class EntitySectionDebugRenderer : MeshInstance3D
     private EntitySectionManager _manager;
     private OrmMaterial3D _material;
 
+    [Export] public bool enabled = true;
+
     [Export] public Color SectionBoxColor { get; set; } = new(0, 1, 0, 0.4f); // Green wireframe
     [Export] public Color EntityMarkerColor { get; set; } = new(1, 0, 0, 1.0f); // Red dots/lines
     [Export] public bool DrawEntities { get; set; } = true;
@@ -34,6 +36,8 @@ public partial class EntitySectionDebugRenderer : MeshInstance3D
     public override void _Process(double delta)
     {
         if (_manager == null || Mesh is not ImmediateMesh immediateMesh) return;
+
+        if (!enabled) return;
 
         immediateMesh.ClearSurfaces();
 
@@ -116,5 +120,20 @@ public partial class EntitySectionDebugRenderer : MeshInstance3D
     {
         mesh.SurfaceAddVertex(start);
         mesh.SurfaceAddVertex(end);
+    }
+
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        // TODO: This shouldn't be here but oh well
+
+        if (@event is InputEventKey keyEvent && keyEvent.Pressed && !keyEvent.Echo)
+        {
+            if (keyEvent.Keycode == Key.N)
+            {
+                if (_manager == null || Mesh is not ImmediateMesh immediateMesh) return;
+                this.enabled = !this.enabled;
+                immediateMesh.ClearSurfaces();
+            }
+        }
     }
 }
