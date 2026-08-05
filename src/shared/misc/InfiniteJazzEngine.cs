@@ -36,7 +36,7 @@ public partial class InfiniteJazzEngine : Node
     private float trumpetPan = 0.0f; // Stereo position (-1.0 Left to +1.0 Right)
     private float panAngle = 0.0f;
 
-    private ulong noiseSeed = 987654321;
+    private ulong noiseSeed = new RandomNumberGenerator().Seed;
 
     // Call and response state machine
     private enum BandState
