@@ -23,6 +23,7 @@ public class Scene
     #region Level Attributes
 
     public float minY = -64; // TODO: Later on, this is changed dynamically based on total level bounds
+    internal Node3D? defaultSpawnNode;
 
     #endregion
 
@@ -36,6 +37,16 @@ public class Scene
         );
 
         this.entityManager = new EntitySectionManager(callbackProxy);
+    }
+
+    public Vector3 getPlayerSpawnPosition()
+    {
+        if (this.defaultSpawnNode == null)
+        {
+            return new Vector3();
+        }
+
+        return this.defaultSpawnNode.Position;
     }
 
     public IEntity getEntityByUuid(string uuid)
@@ -137,28 +148,5 @@ public class Scene
     internal void update(double deltaTime, double currentTime)
     {
         this.entityTickList.forEach((entity => entity.update(deltaTime, currentTime)));
-
-        // FOR NOW
-
-        if (false)
-        {
-            if (new Random().NextDouble() < 0.15)
-            {
-                const float spawnRandom = (float)30;
-                Vector2 pos = Vector2.FromAngle(GD.Randf() * 2 * Single.Pi);
-                Vector3 finalPos = new Vector3(pos.X * spawnRandom * GD.Randf(), 3, pos.Y * spawnRandom);
-                var definition = GD.Load<InventoryDefinition>("res://scenes/test_can.tres");
-                this.spawnItem(new ItemStack(definition), new Vector3(0, 10, 0));
-
-                if (new Random().NextDouble() < 0.2)
-                {
-                    this.spawnEntity("res://scenes/npc.tscn", finalPos);
-                    this.createExplosion(finalPos, 20.0f, 15.0f);
-                    var finalExplosionPos = new Vector3(finalPos.X, finalPos.Y - 1.5f, finalPos.Z);
-                    this.createExplosion(finalExplosionPos, 20.0f, 15.0f);
-                    this.createExplosion(new Vector3(0, 2, 0), 20.0f, 15.0f);
-                }
-            }
-        }
     }
 }

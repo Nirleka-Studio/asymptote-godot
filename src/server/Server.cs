@@ -1,5 +1,8 @@
+#nullable enable
+
 using System;
 using Asymptote.Shared.World.Entity.Player;
+using Asymptote.Shared.World.Level.Map;
 using Asymptote.Shared.World.Level.Scene;
 using Asymptote.Shared.World.Player;
 using Asymptote.Util;
@@ -17,6 +20,8 @@ public partial class Server : Node
     private ulong currentTick = 0;
 
     private EntitySectionDebugRenderer sectionsDebugger;
+
+    private Node playersNode;
 
     public Server()
     {
@@ -57,6 +62,17 @@ public partial class Server : Node
 
     #region Life Cycle and Players
 
+    private Node3D? getDefaultSpawnNode()
+    {
+        var map = GetNode<Node3D>("Map").GetChildOrNull<Map>(0);
+        if (map == null)
+        {
+            return null;
+        }
+
+        return map.defaultSpawnNode;
+    }
+
     public override void _Ready()
     {
         if (!Multiplayer.IsServer())
@@ -66,6 +82,10 @@ public partial class Server : Node
             return;
         }
 
+        this.playersNode = GetNode("Players");
+        this.scene.entitiesNode = GetNode<Node3D>("Entities");
+        this.scene.defaultSpawnNode = this.getDefaultSpawnNode();
+
         Multiplayer.PeerConnected += onPlayerJoined;
         Multiplayer.PeerDisconnected += onPlayerLeft;
 
@@ -74,12 +94,11 @@ public partial class Server : Node
             this.onPlayerJoined(id);
         }
 
+        // If this is run on a server, this check prevents spawning the host player.
         if (!OS.HasFeature("dedicated_server"))
         {
             this.onPlayerJoined(1); // Won't this certainly lead to persistence error?
         }
-
-        this.scene.entitiesNode = GetNode<Node3D>("Entities");
     }
 
     public override void _ExitTree()
@@ -105,34 +124,29 @@ public partial class Server : Node
 
     private void onPlayerJoined(long id)
     {
-        // TODO: Also on `onPlayerLeft`, this should be more cleaner
+        string strId = id.ToString();
+
+        if (this.playersNode.HasNode(strId))
+        {
+            GD.PushWarning($"Player {id} is already spawned. Skipping.");
+            return;
+        }
 
         GD.Print($"Adding player {id}");
-
-        var playersScene = GetNode("Players");
-
-        // To decouple the player CONNECTION instance and the player CHARACTER (entity),
-        // `player_instance` will represent the connection and `player` is the actual character entity which exists
-        // in the world.
-        // PackedScene playerScene = GD.Load<PackedScene>("res://scenes/player_instance.tscn");
-        // var player = (Player)playerScene.Instantiate();
 
         PackedScene characterScene = GD.Load<PackedScene>("res://scenes/player.tscn");
         var character = (PlayerEntity)characterScene.Instantiate();
 
-        // player.peerId = id;
-        // player.name = id.ToString(); // for now
-        character.Name = id.ToString(); // to get the peer_id
+        character.Name = strId;
 
-        // Randomize character position
-        const float spawnRandom = (float)5.0;
-        Vector2 pos = Vector2.FromAngle(GD.Randf() * 2 * Single.Pi);
-        character.Position = new Vector3(pos.X * spawnRandom * GD.Randf(), 3, pos.Y * spawnRandom);
-
-        playersScene.AddChild(character, true);
+        // Using .GlobalPosition causes
+        // Condition "!is_inside_tree()" is true. Returning: Transform3D()
+        // For some fucking reason.
+        character.Position = this.scene.getPlayerSpawnPosition();
+        this.playersNode.AddChild(character, true);
 
         // Add it to the actual Scene
-        character.uuid = id.ToString();
+        character.uuid = strId;
         character.setScene(this.scene);
         this.scene.entityManager.addEntity(character);
     }
@@ -141,9 +155,12 @@ public partial class Server : Node
     {
         GD.Print($"Removing player {id}");
 
-        if (!GetNode("Players").HasNode(id.ToString())) return;
+        Node playerNode = playersNode.GetNodeOrNull(id.ToString());
 
-        GetNode("Players").GetNode(id.ToString()).QueueFree();
+        if (playerNode != null)
+        {
+            playerNode.QueueFree();
+        }
         // EntityPlayer itself already handles deletion from the entityManager as
         // it listens to the removal event.
     }

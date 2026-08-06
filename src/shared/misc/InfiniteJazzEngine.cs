@@ -366,7 +366,11 @@ public partial class InfiniteJazzEngine : Node
 
     public override void _ExitTree()
     {
-        base._ExitTree();
-        QueueFree(); // What the fuck?
+        if (audioPlayer != null && IsInstanceValid(audioPlayer))
+        {
+            audioPlayer.Stop();
+        }
+
+        playback = null;
     }
 }
