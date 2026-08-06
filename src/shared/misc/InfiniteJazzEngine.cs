@@ -363,4 +363,10 @@ public partial class InfiniteJazzEngine : Node
     }
 
     private float PickScaleNote(ChordDef chord) => chord.Scale[random.Next(0, chord.Scale.Length)];
+
+    public override void _ExitTree()
+    {
+        base._ExitTree();
+        QueueFree(); // What the fuck?
+    }
 }
