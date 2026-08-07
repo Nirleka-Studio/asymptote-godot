@@ -92,53 +92,49 @@ func _change_zoom_state(new_state: float) -> void:
 func _process(delta: float) -> void:
 	_handle_input_actions()
 
-	current_zoom = lerp(current_zoom, zoom_state, delta / zoom_lerp_speed)
-	current_side = lerp(current_side, target_side, delta / tween_speed)
-	camera.fov = lerp(camera.fov, target_fov, delta / fov_lerp_speed)
+	current_zoom = lerp(current_zoom, zoom_state, 1.0 - exp(-delta / zoom_lerp_speed))
+	current_side = lerp(current_side, target_side, 1.0 - exp(-delta / tween_speed))
+	camera.fov = lerp(camera.fov, target_fov, 1.0 - exp(-delta / fov_lerp_speed))
 
 	var basis_y := Basis(Vector3.UP, rot_y)
 	var basis_x := Basis(Vector3.RIGHT, rot_x)
 	var base_basis := basis_y * basis_x
 
 	var pivot_pos := player.global_position + Vector3(0, height_offset, 0)
+	
 	var shoulder_offset := base_basis.x * (current_side * shoulder_distance)
 	var camera_origin := pivot_pos + shoulder_offset
-	
-	# For some goddamn reason:
-	# +Z is backward in Godot. This correctly pulls the camera away from the head.
 	var target_offset := base_basis.z * distance
-	var third_person_pos := camera_origin + target_offset
+	
+	var full_third_person_pos := camera_origin + target_offset
 
-	if current_zoom > 0.1:
-		var space_state := get_world_3d().direct_space_state
-		var query := PhysicsShapeQueryParameters3D.new()
-		var sphere := SphereShape3D.new()
-		sphere.radius = camera_radius
-		query.shape = sphere
-		query.transform = Transform3D(Basis(), camera_origin)
-		query.motion = target_offset
-		query.exclude = [player.get_rid()]
+	var space_state := get_world_3d().direct_space_state
+	var query := PhysicsShapeQueryParameters3D.new()
+	var sphere := SphereShape3D.new()
+	sphere.radius = camera_radius
+	query.shape = sphere
+	query.transform = Transform3D(Basis(), camera_origin)
+	query.motion = target_offset
+	query.exclude = [player.get_rid()]
 
-		var cast_result := space_state.cast_motion(query)
-		if cast_result.size() > 0:
-			var safe_fraction: float = max(0.0, cast_result[0] - 0.02)
-			third_person_pos = camera_origin + (target_offset * safe_fraction)
+	var cast_result := space_state.cast_motion(query)
+	if cast_result.size() > 0:
+		var safe_fraction: float = max(0.0, cast_result[0] - 0.02)
+		full_third_person_pos = camera_origin + (target_offset * safe_fraction)
 
-	var actual_pos := pivot_pos.lerp(third_person_pos, current_zoom)
+	var actual_pos := pivot_pos.lerp(full_third_person_pos, current_zoom)
 
 	var final_offset := Transform3D.IDENTITY
 	if not camera_offsets.is_empty():
 		var keys: Array = camera_offsets.keys()
-		keys.sort_custom(func(a: Camera3D, b: Camera3D) -> bool:
+		keys.sort_custom(func(a: String, b: String) -> bool:
 			return camera_offsets[a].priority < camera_offsets[b].priority)
-		for key: int in keys:
+		for key: String in keys:
 			final_offset = final_offset * camera_offsets[key].value
 		camera_offsets.clear()
 
 	global_position = actual_pos
 	global_transform.basis = base_basis
-
-	# this kills the editor-offset rotation bug entirely
 	camera.transform = final_offset
 
 func _handle_input_actions() -> void:
