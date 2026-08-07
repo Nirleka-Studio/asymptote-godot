@@ -4,12 +4,12 @@ class_name CameraController
 signal zoom_changed(is_first_person: bool)
 
 @export_category("Camera Settings")
-@export var distance: float = 8.0
-@export var shoulder_distance: float = 2.5
+@export var distance: float = 4.0
+@export var shoulder_distance: float = 1.5
 @export var tween_speed: float = 0.2
 @export var zoom_lerp_speed: float = 0.1
 @export var camera_radius: float = 0.5
-@export var height_offset: float = 1.5
+@export var height_offset: float = 0.5
 
 @export_category("FOV Settings")
 @export var default_fov: float = 70.0
@@ -91,9 +91,6 @@ func _change_zoom_state(new_state: float) -> void:
 
 func _process(delta: float) -> void:
 	_handle_input_actions()
-
-	# if hold_lean and target_side != 0.0:
-	#	target_side = target_side if (key_held_lean_left or key_held_lean_right) else 0.0
 
 	current_zoom = lerp(current_zoom, zoom_state, delta / zoom_lerp_speed)
 	current_side = lerp(current_side, target_side, delta / tween_speed)
