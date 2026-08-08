@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dj05h3oxextel" path="res://src/client/Startup.gd" id="1_t87yh"]
 [ext_resource type="Script" uid="uid://d02cf4qqdn2vn" path="res://src/client/ui/EscapeMenu.gd" id="2_tpfpu"]
 [ext_resource type="Shader" uid="uid://bc20nm1tyeycl" path="res://assets/shaders/fishbowl.gdshader" id="3_gqkje"]
+[ext_resource type="Script" uid="uid://cpbvhahtvkgtt" path="res://src/client/ui/crosshair.gd" id="3_ifgkd"]
 [ext_resource type="Shader" uid="uid://bsh6wfwvg4f5f" path="res://assets/shaders/vignette.gdshader" id="3_j40w7"]
 [ext_resource type="Script" uid="uid://b7ogjbt3mhst4" path="res://src/shared/util/DebugDraw.cs" id="3_ybs1l"]
 
@@ -37,6 +38,9 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="Crosshair" type="CanvasLayer" parent="UI" unique_id=1496503027]
+script = ExtResource("3_ifgkd")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI" unique_id=780333019]
 layout_mode = 0
