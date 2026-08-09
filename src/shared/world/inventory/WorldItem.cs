@@ -68,20 +68,43 @@ public partial class WorldItem : RigidBody3D, IEntity
         // TODO: ItemPresentation.worldModel here once that resource exists
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+    [Rpc(
+        MultiplayerApi.RpcMode.AnyPeer,
+        CallLocal = true,
+        TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+    )]
     public void RequestPickup()
     {
+        GD.Print("Request pickup received");
         if (!Multiplayer.IsServer()) return;
+        GD.Print("Passed");
 
         int senderId = Multiplayer.GetRemoteSenderId();
+
+        // If senderId is 0, this was invoked locally by the server player
+        if (senderId == 0)
+        {
+            senderId = Multiplayer.GetUniqueId();
+        }
+
         var requester = GetTree().GetNodesInGroup("players")
             .OfType<PlayerEntity>()
             .FirstOrDefault(p => p.GetMultiplayerAuthority() == senderId);
 
+        GD.Print("Requester: ", requester);
         if (requester == null) return;
 
+        const float maxPickupDistance = 3.0f;
+        if (GlobalPosition.DistanceTo(requester.GlobalPosition) > maxPickupDistance)
+        {
+            return;
+        }
+
         var inventory = requester.getComponent<InventoryComponent>();
-        tryPickup(inventory.main);
+        if (inventory?.main != null)
+        {
+            tryPickup(inventory.main);
+        }
     }
 
     public bool tryPickup(InventoryContainer destination)

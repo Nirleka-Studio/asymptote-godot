@@ -148,5 +148,13 @@ public class Scene
     internal void update(double deltaTime, double currentTime)
     {
         this.entityTickList.forEach((entity => entity.update(deltaTime, currentTime)));
+
+        if (new Random().NextDouble() < 0.1)
+        {
+            spawnItem(
+                new ItemStack(GD.Load<InventoryDefinition>("res://scenes/test_can.tres")),
+                new Vector3(0, 1, 0)
+            );
+        }
     }
 }

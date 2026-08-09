@@ -1,11 +1,13 @@
+using Asymptote.Shared.Physics.Structs;
 using Asymptote.Shared.World.Entity.Component.Inventory;
 using Asymptote.Shared.World.Entity.Player;
+using Asymptote.Shared.World.Inventory;
 using Godot;
 
 namespace Asymptote.Client.UI.Inventory;
 
 // I fucking hate this
-public partial class PlayerInventoryController : Node
+public partial class PlayerInventoryController : Node3D
 {
     [Export] public NodePath playerEntityPath = "..";
 
@@ -51,5 +53,25 @@ public partial class PlayerInventoryController : Node
 
     private void tryPickup()
     {
+        if (!IsMultiplayerAuthority()) return;
+
+        Camera3D cam = GetViewport().GetCamera3D();
+        if (cam == null) return;
+
+        Vector2 mousePos = GetViewport().GetMousePosition();
+        Vector3 from = cam.ProjectRayOrigin(mousePos);
+
+        const float maxReach = 5.0f; // TODO: This should be somewhere on the server
+        Vector3 to = from + cam.ProjectRayNormal(mousePos) * maxReach;
+
+        if (this.Raycast(from, to) is { } hit)
+        {
+            if (hit.Collider is WorldItem worldItem)
+            {
+                GD.Print("Got item");
+                // Send the pickup request to the Server (Peer ID 1)
+                worldItem.RpcId(1, WorldItem.MethodName.RequestPickup);
+            }
+        }
     }
 }

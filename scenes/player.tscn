@@ -28,7 +28,6 @@ mesh = SubResource("CapsuleMesh_3vyb7")
 [node name="CameraPivot" type="Node3D" parent="." unique_id=416687874]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.47611475, 0)
 script = ExtResource("2_g2els")
-distance = 4.0
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot" unique_id=152193574]
 
@@ -42,5 +41,5 @@ replication_config = SubResource("SceneReplicationConfig_qhqgy")
 [node name="CharacterController" type="Node3D" parent="." unique_id=718993067]
 script = ExtResource("1_3vyb7")
 
-[node name="PlayerInventoryController" type="Node" parent="." unique_id=1435440782]
+[node name="PlayerInventoryController" type="Node3D" parent="." unique_id=1582378251]
 script = ExtResource("4_dqkch")

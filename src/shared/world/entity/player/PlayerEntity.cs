@@ -48,6 +48,8 @@ public partial class PlayerEntity : CharacterBody3D, IEntity
             [typeof(InventoryComponent)] = new InventoryComponent(this)
         };
         character.TreeExited += _ExitTree;
+
+        this.AddToGroup("players");
     }
 
     public string getUuid()
