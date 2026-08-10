@@ -1,11 +1,13 @@
 [gd_scene format=3 uid="uid://cqu4kcufgsl0d"]
 
 [ext_resource type="Script" uid="uid://dj05h3oxextel" path="res://src/client/Startup.gd" id="1_t87yh"]
-[ext_resource type="Script" uid="uid://d02cf4qqdn2vn" path="res://src/client/ui/EscapeMenu.gd" id="2_tpfpu"]
+[ext_resource type="Script" uid="uid://cbrwgqvaegko4" path="res://src/client/ui/EngineDebugText.cs" id="3_4smdl"]
 [ext_resource type="Shader" uid="uid://bc20nm1tyeycl" path="res://assets/shaders/fishbowl.gdshader" id="3_gqkje"]
 [ext_resource type="Script" uid="uid://cpbvhahtvkgtt" path="res://src/client/ui/crosshair.gd" id="3_ifgkd"]
 [ext_resource type="Shader" uid="uid://bsh6wfwvg4f5f" path="res://assets/shaders/vignette.gdshader" id="3_j40w7"]
+[ext_resource type="Script" uid="uid://calpql1fqk7u6" path="res://src/client/commands/ui/CommandsScreen.cs" id="3_xl40u"]
 [ext_resource type="Script" uid="uid://b7ogjbt3mhst4" path="res://src/shared/util/DebugDraw.cs" id="3_ybs1l"]
+[ext_resource type="Script" uid="uid://cim5bb682fkfc" path="res://src/client/ui/EscapeMenu.cs" id="7_4smdl"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gqkje"]
 shader = ExtResource("3_gqkje")
@@ -25,8 +27,8 @@ shader_parameter/dither_strength = 0.03
 [node name="Machine" type="Node" unique_id=1580243688]
 script = ExtResource("1_t87yh")
 
-[node name="EscapeMenu" type="Node" parent="." unique_id=702721892]
-script = ExtResource("2_tpfpu")
+[node name="Debug" type="MeshInstance3D" parent="." unique_id=1918250545]
+script = ExtResource("3_ybs1l")
 
 [node name="LevelSpawner" type="MultiplayerSpawner" parent="." unique_id=2014141025]
 _spawnable_scenes = PackedStringArray("uid://cyhae2muwf70a")
@@ -39,8 +41,43 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
+[node name="DebugText" type="CanvasLayer" parent="UI" unique_id=183466269]
+script = ExtResource("3_4smdl")
+
+[node name="Effects" type="CanvasLayer" parent="UI" unique_id=1610505155]
+
+[node name="ChromAber" type="ColorRect" parent="UI/Effects" unique_id=869533482]
+material = SubResource("ShaderMaterial_gqkje")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="LensDistortion" type="ColorRect" parent="UI/Effects" unique_id=863400433]
+material = SubResource("ShaderMaterial_gqkje")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Vignette" type="ColorRect" parent="UI/Effects" unique_id=232732000]
+material = SubResource("ShaderMaterial_ifgkd")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="Crosshair" type="CanvasLayer" parent="UI" unique_id=1496503027]
 script = ExtResource("3_ifgkd")
+
+[node name="EscapeMenu" type="Node2D" parent="UI" unique_id=99791648]
+script = ExtResource("7_4smdl")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI" unique_id=780333019]
 layout_mode = 0
@@ -57,37 +94,11 @@ layout_mode = 2
 text = "Connect
 "
 
-[node name="CanvasLayer" type="CanvasLayer" parent="UI" unique_id=1610505155]
-
-[node name="ChromAber" type="ColorRect" parent="UI/CanvasLayer" unique_id=869533482]
-material = SubResource("ShaderMaterial_gqkje")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="LensDistortion" type="ColorRect" parent="UI/CanvasLayer" unique_id=863400433]
-material = SubResource("ShaderMaterial_gqkje")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="Vignette" type="ColorRect" parent="UI/CanvasLayer" unique_id=232732000]
-material = SubResource("ShaderMaterial_ifgkd")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="Debug" type="MeshInstance3D" parent="." unique_id=1918250545]
-script = ExtResource("3_ybs1l")
+[node name="Commands" type="Control" parent="UI" unique_id=1661582128]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_xl40u")
 
 [connection signal="pressed" from="UI/VBoxContainer/ButtonHost" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="UI/VBoxContainer/ButtonConnect" to="." method="_on_client_pressed"]

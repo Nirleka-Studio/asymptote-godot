@@ -25,7 +25,12 @@ public partial class PlayerInventoryController : Node3D
 
         if (@event.IsActionPressed("inventory_toggle"))
         {
-            onInventoryToggle();
+            onInventoryToggle(null);
+        }
+
+        if (@event.IsActionPressed("ui_cancel"))
+        {
+            onInventoryToggle(ExplicitAction.CLOSE);
         }
 
         if (@event.IsActionPressed("pick_up_item"))
@@ -34,13 +39,33 @@ public partial class PlayerInventoryController : Node3D
         }
     }
 
-    private void onInventoryToggle()
+    private void onInventoryToggle(ExplicitAction? action)
     {
         // Toggle UI
         screen ??= GetNode<InventoryScreen>("/root/InventoryScene");
-        screen.toggle(player.getComponent<InventoryComponent>());
+        InventoryComponent component = player.getComponent<InventoryComponent>();
+        if (action == ExplicitAction.CLOSE)
+        {
+            screen.close();
+            GetViewport().SetInputAsHandled();
+        }
+        else
+        {
+            screen.toggle(component);
+        }
 
+        setMouseMode(action);
+    }
+
+    private void setMouseMode(ExplicitAction? action = null)
+    {
         // TODO: There should be a central mouse manager for this
+        if (action == ExplicitAction.CLOSE)
+        {
+            Input.MouseMode = Input.MouseModeEnum.Captured;
+            return;
+        }
+
         if (Input.MouseMode == Input.MouseModeEnum.Captured)
         {
             Input.MouseMode = Input.MouseModeEnum.Visible;
@@ -73,5 +98,11 @@ public partial class PlayerInventoryController : Node3D
                 worldItem.RpcId(1, WorldItem.MethodName.RequestPickup);
             }
         }
+    }
+
+    private enum ExplicitAction
+    {
+        CLOSE,
+        OPEN
     }
 }
