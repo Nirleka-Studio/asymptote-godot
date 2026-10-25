@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Asymptote.Client.UI.Detection;
 using Asymptote.Shared.World.Entity.AI;
 using Asymptote.Shared.World.Entity.AI.Detection;
 using Asymptote.Shared.World.Entity.AI.Memory;
@@ -137,6 +138,8 @@ public partial class Npc : CharacterBody3D, IEntity
 
             GD.Print($"UUID: '{detectableEntity.getUuid()}' : {tracker.value}");
         }
+
+        this.detectionManager.flushToClients();
 
         #endregion
 
@@ -310,6 +313,23 @@ public partial class Npc : CharacterBody3D, IEntity
     {
         base._ExitTree();
         ((IEntity)this).remove(IEntity.RemovalReason.EXIT_TREE);
+    }
+
+    #endregion
+
+    #region Network
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true,
+        TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]
+    public void RpcReceiveDetectionData(Godot.Collections.Dictionary detectionData)
+    {
+        foreach (var key in detectionData.Keys)
+        {
+            string cuuid = key.AsString();
+            float detectionValue = (float)detectionData[key];
+
+            ClientDetectionManager.UpdateClientMeter(cuuid, detectionValue);
+        }
     }
 
     #endregion

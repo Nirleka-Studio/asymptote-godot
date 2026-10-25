@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://gb8q1upwqqwc" path="res://src/server/Server.cs" id="1_mx8sn"]
 [ext_resource type="Script" uid="uid://o4t8fdq4k0av" path="res://src/shared/misc/InfiniteJazzEngine.cs" id="4_mx8sn"]
-[ext_resource type="PackedScene" uid="uid://b8o52708i6u06" path="res://scenes/levels/liminal_space.tscn" id="4_ppgk2"]
+[ext_resource type="PackedScene" uid="uid://dxu6muax3ixac" path="res://scenes/levels/testing_ground.tscn" id="4_ppgk2"]
 [ext_resource type="Script" uid="uid://cxotx2a6rv136" path="res://src/shared/world/entity/npc/NpcSpawner.cs" id="5_ppgk2"]
 [ext_resource type="Script" uid="uid://5u6fmrecay2j" path="res://src/shared/world/inventory/ItemSpawner.cs" id="6_2r41h"]
 
@@ -30,7 +30,7 @@ script = ExtResource("4_mx8sn")
 
 [node name="Map" type="Node3D" parent="." unique_id=1500555434]
 
-[node name="LiminalSpace" parent="Map" unique_id=1229703305 instance=ExtResource("4_ppgk2")]
+[node name="TestingGround" parent="Map" unique_id=1523421844 instance=ExtResource("4_ppgk2")]
 
 [node name="NpcSpawner" type="Node3D" parent="." unique_id=163971199]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9076834, 0)

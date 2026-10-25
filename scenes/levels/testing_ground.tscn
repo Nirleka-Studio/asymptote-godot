@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://dxu6muax3ixac"]
+
+[ext_resource type="Script" uid="uid://cpqh5dxmjtxt1" path="res://src/shared/world/level/map/Map.cs" id="1_xsq8p"]
+[ext_resource type="Texture2D" uid="uid://c0rkp78trs3qp" path="res://assets/textures/kenney_prototype-textures/PNG/Dark/texture_08.png" id="2_chkff"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_xsq8p"]
+
+[sub_resource type="Sky" id="Sky_chkff"]
+sky_material = SubResource("ProceduralSkyMaterial_xsq8p")
+
+[sub_resource type="Environment" id="Environment_bjpfc"]
+background_mode = 2
+sky = SubResource("Sky_chkff")
+ambient_light_color = Color(0.38356328, 0.0014066694, 0.6097339, 1)
+ambient_light_energy = 2.72
+tonemap_mode = 2
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_chkff"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bjpfc"]
+albedo_texture = ExtResource("2_chkff")
+uv1_triplanar = true
+
+[node name="TestingGround" type="Node3D" unique_id=1523421844 node_paths=PackedStringArray("defaultSpawnNode")]
+script = ExtResource("1_xsq8p")
+defaultSpawnNode = NodePath("SpawnPoint")
+
+[node name="SpawnPoint" type="Node3D" parent="." unique_id=1657184076]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1088246072]
+environment = SubResource("Environment_bjpfc")
+
+[node name="Matters" type="Node3D" parent="." unique_id=2024864769]
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Matters" unique_id=1550746418]
+navigation_mesh = SubResource("NavigationMesh_chkff")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Matters/NavigationRegion3D" unique_id=922039748]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -16.5)
+use_collision = true
+size = Vector3(17, 1, 40)
+material = SubResource("StandardMaterial3D_bjpfc")

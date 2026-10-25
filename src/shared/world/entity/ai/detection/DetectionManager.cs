@@ -167,8 +167,21 @@ public class DetectionManager
         return 1f / BASE_DETECTION_TIME * speedMultiplier;
     }
 
-    public static void flushToClients()
+    public void flushToClients()
     {
-        // Network shit to tell the clients an NPC's detection value for the detection meter.
+        if (!agent.Multiplayer.IsServer()) return;
+
+        var detectionData = new Godot.Collections.Dictionary();
+
+        foreach (var (entity, tracker) in trackers)
+        {
+            if (tracker.value > 0.01f && !(tracker.value >= 1))
+            {
+                detectionData[entity.getUuid()] = tracker.value;
+            }
+        }
+
+        // Broadcasts to all peers (and executes locally if CallLocal = true)
+        agent.Rpc(nameof(Npc.RpcReceiveDetectionData), detectionData);
     }
 }
