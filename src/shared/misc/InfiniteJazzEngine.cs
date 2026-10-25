@@ -10,7 +10,8 @@ public partial class InfiniteJazzEngine : Node
     private AudioStreamPlayer audioPlayer;
     private AudioStreamGeneratorPlayback playback;
 
-    private bool isMuted = false; // Mute state flag
+    [Export] public bool defaultState = false;
+    private bool isMuted = true;
 
     private const float SampleRate = 44100.0f;
     private double bpm = 230; // 220.0 seems fine
@@ -116,6 +117,7 @@ public partial class InfiniteJazzEngine : Node
 
     public override void _Ready()
     {
+        this.isMuted = !this.defaultState;
         var generator = new AudioStreamGenerator
         {
             MixRate = SampleRate,
