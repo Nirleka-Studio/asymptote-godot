@@ -88,6 +88,7 @@ public interface IEntity
         KILLED,
         DISCARDED,
         EXIT_TREE,
-        BELOW_WORLD
+        BELOW_WORLD,
+        DESPAWNED
     }
 }

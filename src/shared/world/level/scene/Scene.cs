@@ -1,7 +1,10 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
+using Asymptote.Shared.World.Compound;
 using Asymptote.Shared.World.Entity;
+using Asymptote.Shared.World.Entity.Player;
 using Asymptote.Shared.World.Level.Entity;
 using Asymptote.Shared.World.Inventory;
 using Asymptote.Util;
@@ -11,6 +14,7 @@ namespace Asymptote.Shared.World.Level.Scene;
 
 public class Scene
 {
+    public List<PlayerEntity> players { get; } = new();
     public EntityTickList entityTickList { get; private set; }
     public EntitySectionManager entityManager { get; private set; }
 
@@ -27,6 +31,12 @@ public class Scene
 
     #endregion
 
+    #region Compounds
+
+    public CompoundManager compounds { get; }
+
+    #endregion
+
     public Scene()
     {
         this.entityTickList = new EntityTickList();
@@ -37,6 +47,7 @@ public class Scene
         );
 
         this.entityManager = new EntitySectionManager(callbackProxy);
+        this.compounds = new CompoundManager(this);
     }
 
     public Vector3 getPlayerSpawnPosition()
@@ -54,7 +65,7 @@ public class Scene
         return this.entityManager.getEntityByUuid(uuid);
     }
 
-    public IEntity? spawnEntity(string scenePath, Vector3 position, Vector3? rotation = null)
+    public IEntity? spawnEntity(string scenePath, Vector3 position, Vector3? rotation = null, string? uuid = null)
     {
         PackedScene entityScene = GD.Load<PackedScene>(scenePath);
         if (entityScene == null)
@@ -70,6 +81,8 @@ public class Scene
         {
             character.setRotation(rotation.Value);
         }
+
+        if (uuid != null) character.uuid = uuid;
 
         character.setScene(this);
         this.entityManager.addEntity(character);
@@ -145,9 +158,18 @@ public class Scene
         }
     }
 
+    public void addPlayer(PlayerEntity player)
+    {
+        player.setScene(this);
+        this.entityManager.addEntity(player);
+        this.players.Add(player);
+        player.onRemovedFromWorld += _ => this.players.Remove(player);
+    }
+
     internal void update(double deltaTime, double currentTime)
     {
         this.entityTickList.forEach((entity => entity.update(deltaTime, currentTime)));
+        this.compounds.update(deltaTime);
 
         if (false)
         {

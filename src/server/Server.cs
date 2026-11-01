@@ -1,6 +1,7 @@
 #nullable enable
 
 using System;
+using Asymptote.Shared.World.Compound;
 using Asymptote.Shared.World.Entity.Player;
 using Asymptote.Shared.World.Level.Map;
 using Asymptote.Shared.World.Level.Scene;
@@ -86,6 +87,14 @@ public partial class Server : Node
         this.scene.entitiesNode = GetNode<Node3D>("Entities");
         this.scene.defaultSpawnNode = this.getDefaultSpawnNode();
 
+        foreach (var node in GetTree().GetNodesInGroup(CompoundDefinition.GROUP))
+        {
+            if (node is CompoundDefinition def)
+            {
+                this.scene.compounds.register(def.build());
+            }
+        }
+
         Multiplayer.PeerConnected += onPlayerJoined;
         Multiplayer.PeerDisconnected += onPlayerLeft;
 
@@ -147,8 +156,7 @@ public partial class Server : Node
 
         // Add it to the actual Scene
         character.uuid = strId;
-        character.setScene(this.scene);
-        this.scene.entityManager.addEntity(character);
+        this.scene.addPlayer(character);
     }
 
     private void onPlayerLeft(long id)
