@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Asymptote.Shared.Physics.Collision;
 using Asymptote.Shared.World.Entity.Component;
 using Asymptote.Shared.World.Entity.Component.Inventory;
 using Asymptote.Shared.World.Level.Scene;
@@ -158,6 +159,33 @@ public partial class PlayerEntity : CharacterBody3D, IEntity
         base._ExitTree();
         ((IEntity)this).remove(IEntity.RemovalReason.EXIT_TREE);
     }
+
+    public override void _Ready()
+    {
+        base._Ready();
+
+        CollisionLayer = CollisionMasks.PLAYERS;
+        CollisionMask = CollisionMasks.WORLD | CollisionMasks.NPCS | CollisionMasks.PLAYERS;
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Networking
+
+    #region Interactions
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true,
+        TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void rpcInteract(string interactionType, string targetUuid)
+    {
+        if (!Multiplayer.IsServer()) return;
+        GD.Print($"Interaction handled! {interactionType}, {targetUuid}");
+        // scene.interactions.handle(this, interactionType, targetUuid);
+    }
+
+    public void requestInteract(string type, string uuid) => RpcId(1, nameof(rpcInteract), type, uuid);
 
     #endregion
 

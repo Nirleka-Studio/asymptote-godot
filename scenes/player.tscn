@@ -1,8 +1,9 @@
-[gd_scene format=3 uid="uid://vuhh772oec5y"]
+[gd_scene format=3 uid="uid://l33g24jbea2v"]
 
 [ext_resource type="Script" uid="uid://b1u60ncp52vgt" path="res://src/client/character/CharacterController.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://c7ohf44ip775i" path="res://src/shared/world/entity/player/PlayerEntity.cs" id="1_g2els"]
 [ext_resource type="Script" uid="uid://cxx7f1y63lnwo" path="res://src/client/character/CameraController.gd" id="2_g2els"]
+[ext_resource type="Script" uid="uid://c0hyy57q44k7n" path="res://src/client/interaction/InteractRay.cs" id="3_qlg0r"]
 [ext_resource type="Script" uid="uid://d2cmmp6evicmc" path="res://src/client/ui/inventory/PlayerInventoryController.cs" id="4_dqkch"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sh265"]
@@ -43,3 +44,8 @@ script = ExtResource("1_3vyb7")
 
 [node name="PlayerInventoryController" type="Node3D" parent="." unique_id=1582378251]
 script = ExtResource("4_dqkch")
+
+[node name="InteractRay" type="Node3D" parent="." unique_id=1177616352 node_paths=PackedStringArray("parent")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.47611475, 0)
+script = ExtResource("3_qlg0r")
+parent = NodePath("..")

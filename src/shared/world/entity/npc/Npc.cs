@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Asymptote.Client.UI.Detection;
+using Asymptote.Shared.Physics.Collision;
 using Asymptote.Shared.World.Entity.AI;
 using Asymptote.Shared.World.Entity.AI.Detection;
 using Asymptote.Shared.World.Entity.AI.Memory;
@@ -14,7 +15,7 @@ namespace Asymptote.Shared.World.Entity;
 
 public partial class Npc : CharacterBody3D, IEntity
 {
-    private static bool TEMP_PATHFINDING_ENABLED = true;
+    private static bool TEMP_PATHFINDING_ENABLED = false;
     public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
     private Scene scene { get; set; }
 
@@ -90,6 +91,9 @@ public partial class Npc : CharacterBody3D, IEntity
     public override void _Ready()
     {
         this.eyeNode = GetNode<Node3D>("EyeVector");
+
+        CollisionLayer = CollisionMasks.NPCS;
+        CollisionMask = CollisionMasks.WORLD | CollisionMasks.PLAYERS | CollisionMasks.NPCS;
 
         if (!Multiplayer.IsServer())
         {
