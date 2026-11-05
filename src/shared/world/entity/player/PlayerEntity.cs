@@ -181,7 +181,7 @@ public partial class PlayerEntity : CharacterBody3D, IEntity
     private void rpcInteract(string interactionType, string targetUuid)
     {
         if (!Multiplayer.IsServer()) return;
-        GD.Print($"Interaction handled! {interactionType}, {targetUuid}");
+        GD.Print($"Interaction handled on server entity! {interactionType}, {targetUuid}");
         // scene.interactions.handle(this, interactionType, targetUuid);
     }
 

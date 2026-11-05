@@ -21,11 +21,9 @@ public partial class InteractRay : Node3D
         foreach (Prompt prompt in PromptRegistry.Instance.prompts)
         {
             float distSq = this.GlobalPosition.DistanceSquaredTo(prompt.GlobalPosition);
-            GD.Print(distSq);
 
             if (distSq > prompt.activationDistance * prompt.activationDistance || distSq >= bestDistSq)
             {
-                GD.Print("dist fail");
                 continue;
             }
 
@@ -49,7 +47,6 @@ public partial class InteractRay : Node3D
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        GD.Print(this.target);
         if (this.target == null) return;
 
         if (@event.IsActionPressed(this.target.action))
