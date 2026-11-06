@@ -1,25 +1,38 @@
-using Asymptote.Client.Interaction;
+using Asymptote.Shared.Physics.Collision;
 using Godot;
 
 namespace Asymptote.Shared.World.Interaction;
 
 public partial class Prompt : Marker3D
 {
-    [Export] public int activationDistance { get; set; } = 3;
+    public const string GROUP = "prompts";
+
     [Export] public StringName action { get; set; } = "interact";
+    [Export] public string interactionType { get; set; } = "interact";
     [Export] public string labelKey { get; set; } = "PROMPT_INTERACT";
+
+    [Export] public float activationDistance { get; set; } = 3f;
+
+    [Export] public bool enabled { get; set; } = true;
 
     public override void _EnterTree()
     {
-        base._EnterTree();
-
-        PromptRegistry.Instance.registerPrompt(this);
-
-        GD.Print("prompt registered");
+        // Thank God Godot has Roblox's equivalent of CollectionService
+        AddToGroup(GROUP);
     }
 
-    public override void _ExitTree()
+    public bool isReachableFrom(Vector3 origin, Rid exclude, float slack = 0f)
     {
-        base._ExitTree();
+        float max = this.activationDistance + slack;
+        if (origin.DistanceSquaredTo(this.GlobalPosition) > max * max)
+        {
+            return false;
+        }
+
+        var query = PhysicsRayQueryParameters3D.Create(
+            origin, this.GlobalPosition, CollisionMasks.LOS,
+            new Godot.Collections.Array<Rid> { exclude });
+
+        return GetWorld3D().DirectSpaceState.IntersectRay(query).Count == 0;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Asymptote.Shared.Physics.Collision;
 using Asymptote.Shared.World.Entity.Component;
 using Asymptote.Shared.World.Entity.Component.Inventory;
+using Asymptote.Shared.World.Interaction;
 using Asymptote.Shared.World.Level.Scene;
 using Godot;
 
@@ -176,13 +177,17 @@ public partial class PlayerEntity : CharacterBody3D, IEntity
 
     #region Interactions
 
+    public Vector3 getEyePosition() => GetNode<Node3D>("CameraPivot").GlobalPosition;
+
+    public void requestInteract(string promptPath) => RpcId(1, nameof(rpcInteract), promptPath);
+
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true,
         TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void rpcInteract(string interactionType, string targetUuid)
+    private void rpcInteract(string promptPath)
     {
-        if (!Multiplayer.IsServer()) return;
-        GD.Print($"Interaction handled on server entity! {interactionType}, {targetUuid}");
-        // scene.interactions.handle(this, interactionType, targetUuid);
+        if (!Multiplayer.IsServer() || this.scene == null) return;
+        var prompt = GetTree().Root.GetNodeOrNull<Prompt>(promptPath);
+        this.scene.interactions.handle(this, prompt);
     }
 
     public void requestInteract(string type, string uuid) => RpcId(1, nameof(rpcInteract), type, uuid);

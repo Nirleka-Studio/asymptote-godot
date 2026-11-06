@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Asymptote.Shared.World.Compound;
 using Asymptote.Shared.World.Entity;
 using Asymptote.Shared.World.Entity.Player;
+using Asymptote.Shared.World.Interaction;
 using Asymptote.Shared.World.Level.Entity;
 using Asymptote.Shared.World.Inventory;
 using Asymptote.Util;
@@ -17,6 +18,7 @@ public class Scene
     public List<PlayerEntity> players { get; } = new();
     public EntityTickList entityTickList { get; private set; }
     public EntitySectionManager entityManager { get; private set; }
+    public InteractionManager interactions { get; } = new();
 
     // Set by ItemSpawner._Ready() on the server. Any Node3D should work, it just
     // needs to sit under the level's MultiplayerSpawner watched path so

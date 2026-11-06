@@ -108,6 +108,13 @@ public partial class Server : Node
         {
             this.onPlayerJoined(1); // Won't this certainly lead to persistence error?
         }
+
+        // TODO: Remove, test only
+        this.scene.interactions.register("takedown", (player, prompt) =>
+        {
+            GD.Print($"takedown by {player.Name} on {prompt.GetPath()}");
+            return true;
+        });
     }
 
     public override void _ExitTree()

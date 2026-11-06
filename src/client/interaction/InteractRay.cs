@@ -1,4 +1,3 @@
-using Asymptote.Shared.Physics.Collision;
 using Asymptote.Shared.World.Entity.Player;
 using Asymptote.Shared.World.Interaction;
 using Godot;
@@ -7,39 +6,43 @@ namespace Asymptote.Client.Interaction;
 
 public partial class InteractRay : Node3D
 {
-    [Export] public PlayerEntity parent { get; set; }
+    [Export] public CollisionObject3D parent { get; set; }
+
     public Prompt target { get; private set; }
+
+    public override void _Ready()
+    {
+        bool local = this.parent.IsMultiplayerAuthority();
+        SetPhysicsProcess(local);
+        SetProcessUnhandledInput(local);
+    }
 
     public override void _PhysicsProcess(double delta)
     {
-        var space = GetWorld3D().DirectSpaceState;
-        var exclude = new Godot.Collections.Array<Rid> { this.parent.GetRid() };
-
+        Rid exclude = this.parent.GetRid();
         Prompt best = null;
-        float bestDistSq = float.MaxValue;
+        float bestSq = float.MaxValue;
 
-        foreach (Prompt prompt in PromptRegistry.Instance.prompts)
+        foreach (Node node in GetTree().GetNodesInGroup(Prompt.GROUP))
         {
-            float distSq = this.GlobalPosition.DistanceSquaredTo(prompt.GlobalPosition);
-
-            if (distSq > prompt.activationDistance * prompt.activationDistance || distSq >= bestDistSq)
+            if (node is not Prompt prompt || !prompt.enabled)
             {
                 continue;
             }
 
-            var query = PhysicsRayQueryParameters3D.Create(
-                this.GlobalPosition, prompt.GlobalPosition, CollisionMasks.LOS, exclude);
-
-            var hit = space.IntersectRay(query);
-            if (hit.Count > 0)
+            float distSq = this.GlobalPosition.DistanceSquaredTo(prompt.GlobalPosition);
+            if (distSq >= bestSq)
             {
-                var col = hit["collider"].As<CollisionObject3D>();
-                GD.Print($"blocked by {col?.GetPath()} layer={col?.CollisionLayer} at {(Vector3)hit["position"]}");
+                continue;
+            }
+
+            if (!prompt.isReachableFrom(this.GlobalPosition, exclude))
+            {
                 continue;
             }
 
             best = prompt;
-            bestDistSq = distSq;
+            bestSq = distSq;
         }
 
         this.target = best;
@@ -47,13 +50,12 @@ public partial class InteractRay : Node3D
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (this.target == null) return;
-
-        if (@event.IsActionPressed(this.target.action))
+        if (!IsInstanceValid(this.target) || !@event.IsActionPressed(this.target.action))
         {
-            // hand off, don't do networking here
-            this.parent.requestInteract("idfk", "NOT SET");
-            GetViewport().SetInputAsHandled();
+            return;
         }
+
+        (this.parent as PlayerEntity)?.requestInteract(this.target.GetPath().ToString());
+        GetViewport().SetInputAsHandled();
     }
 }

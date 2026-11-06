@@ -20,5 +20,6 @@ shape = SubResource("CapsuleShape3D_tcuxl")
 mesh = SubResource("CapsuleMesh_nh2m4")
 
 [node name="BackPrompt" type="Marker3D" parent="MeshInstance3D" unique_id=2023445772]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.27690858, -0.6047354)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.27690858, 0.55188775)
 script = ExtResource("2_abqhh")
+interactionType = "takedown"

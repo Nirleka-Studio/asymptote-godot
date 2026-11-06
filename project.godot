@@ -22,7 +22,6 @@ config/icon="res://icon.svg"
 InventoryScene="*uid://cguq6n3khr3i3"
 DebugOverlay="*uid://b6bd56pfx2llt"
 ClientDetectionManager="*uid://dhhexvqqe8enb"
-PromptRegistry="*uid://du51tywsd61l1"
 
 [debug]
 
