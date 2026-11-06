@@ -34,7 +34,6 @@ public class VisibleEntitiesSensor : Sensor<Npc>
 
             if (this.isInVision(agent, entity))
             {
-                GD.Print(entity.getUuid(), "Is in vision!");
                 visibleEntities.Add(entity.getUuid());
             }
         }
