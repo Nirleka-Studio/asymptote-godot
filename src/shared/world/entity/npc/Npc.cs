@@ -135,14 +135,6 @@ public partial class Npc : CharacterBody3D, IEntity
             (float)deltaTime
         );
 
-        foreach (var kvp in this.detectionManager.trackers)
-        {
-            var detectableEntity = kvp.Key;
-            var tracker = kvp.Value;
-
-            GD.Print($"UUID: '{detectableEntity.getUuid()}' : {tracker.value}");
-        }
-
         this.detectionManager.flushToClients();
 
         #endregion
